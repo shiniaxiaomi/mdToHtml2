@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>陆英杰的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="陆英杰的博客" content="陆英杰的博客" />
+    <!-- <link rel="stylesheet" type="text/css" href="#{cssPath}/github.css" />
+    <link rel="stylesheet" type="text/css" href="#{cssPath}/highlight.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/css/github.css" />
+    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+    <link
+      rel="stylesheet"
+      href="https://at.alicdn.com/t/font_1374216_5867iv410a9.css"
+    />
+    <script type="text/javascript" src="/js/my.js"></script>
+  </head>
+  <body>
+    <!-- 回到顶部的按钮 -->
+    <a class="top" href="#header">
+      <i class="iconfont icon-up"></i>
+    </a>
+    <div id="header"></div>
+    <div id="sidebar">
+      <div class="top-buttons">
+        <a
+          href="javascript:void(0);"
+          id="top-buttons-file"
+          onclick="changeTopButton('file')"
+          class="top-buttons-ele toc-buttons-file top-clicked"
+          >文件</a
+        >
+        <a
+          href="javascript:void(0);"
+          id="top-buttons-toc"
+          onclick="changeTopButton('toc')"
+          class="top-buttons-ele top-buttons-toc"
+          >目录</a
+        >
+      </div>
+      <!-- 侧边栏的大纲 -->
+      <div id="top-content" class="top-content" style="display:none">
+        #{sidebar-toc}
+      </div>
+      <!-- 侧边栏的目录 -->
+      <div id="top-file" class="top-file">#{sidebar-file}</div>
+    </div>
+
+    <div class="top-container">
+      <h1>readme</h1>
+    </div>
+  </body>
+</html>

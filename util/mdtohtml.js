@@ -1,0 +1,134 @@
+const marked = require("marked"); //markdown解析
+const fs = require("fs");
+const path = require("path");
+const highlight = require("highlight.js"); //代码高亮
+const minify = require("html-minifier").minify; //文本压缩
+const mapDirUtil = require("./mapdirutil"); //遍历文件夹的工具类
+const fileUtil = require("./fileutil"); //文件工具类
+
+const renderer = new marked.Renderer(); //创建markdown渲染对象
+
+//渲染a标签时的回调
+renderer.link = function(href, title, text) {
+  return `<a href="${href}" target="_blank">${text}</a>`;
+};
+
+//渲染h1-h6标签时的回调
+renderer.heading = function(text, level) {
+  //暂存标签,用于生成大纲
+  titleList.push({
+    level: level,
+    text: text
+  });
+  return `<h${level} id="${text}_${level}">${text}</h${level}>`;
+};
+
+//设置markdown解析
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  highlight: function(code, language) {
+    var html = undefined;
+    try {
+      html = highlight.highlight(language, code).value;
+    } catch (err) {
+      //如果不支持某些语言报错,则使用java语法进行转化
+      html = highlight.highlight("java", code).value;
+    }
+    return html;
+  },
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  xhtml: false
+});
+
+// 同步读取 模板内容
+var tempalte = fs
+  .readFileSync(path.join(__dirname, "..", "/html/template.html"))
+  .toString();
+
+//存放note的原数据
+var noteData = {};
+//暂存h1-h6标签的内容
+var titleList = [];
+
+var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+
+//获取目录的html结构
+var dirHtml = fileUtil.getDirHtml(srcDir, targetDir);
+
+//遍历原笔记目录
+mapDirUtil.mapDirSync(
+  srcDir, //src路径
+  "./", //当前目录(生成文件的相对路径)
+  function(srcDir, relativePath, filename) {
+    //文件回调
+    console.log(srcDir, relativePath, filename);
+
+    //如果不是.md文件,则直接进行复制
+    if (!filename.indexOf(".md") != -1) {
+    }
+
+    //读取原文件并缓存
+    var noteStr = fs.readFileSync(path.join(srcDir, relativePath)).toString();
+    noteData[path.join(srcDir, relativePath)] = noteStr;
+
+    //解析文件并生成html
+    var noteHtml = marked(noteStr, { renderer: renderer });
+    //生成toc目录
+    var tocHtml = getTocHtml(titleList);
+
+    //进行模板的参数替换
+    var html = tempalte;
+    if (noteHtml.indexOf("[TOC]") != -1) {
+      //替换[TOC]
+      noteHtml = noteHtml.replace("[TOC]", "");
+      //替换toc目录
+      html = html.replace("#{top-toc}", tocHtml);
+    }
+    html = html
+      .replace("#{title}", filename)
+      .replace("#{keywords}", filename)
+      .replace("#{content}", filename)
+      .replace("#{sidebar-toc}", tocHtml)
+      .replace("#{sidebar-file}", dirHtml)
+      .replace("#{body}", noteHtml);
+
+    //生成html
+    var targetFile = path.join(targetDir, relativePath).replace(".md", ".html");
+    fs.writeFile(
+      targetFile,
+      minify(html, {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      }), //开启文本压缩
+      function(err) {
+        console.log(targetFile + "生成成功!");
+      }
+    );
+
+    //清空数据
+    titleList = [];
+    noteHtml = "";
+    tocHtml = "";
+  },
+  function(srcDir, relativePath, filename) {
+    //目录回调(返回false则该目录不继续遍历)
+    console.log(srcDir, relativePath, filename);
+
+    //rgit仓库
+    if (relativePath.indexOf(".git")) {
+      return;
+    }
+    //在target目录下生成对应的文件夹
+    fs.mkdirSync(path.join(targetDir, relativePath));
+  }
+);
+
+//生成index.html
