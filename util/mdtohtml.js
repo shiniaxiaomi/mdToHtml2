@@ -68,8 +68,11 @@ exports.startToBuild = function(srcDir, targetDir) {
       console.log(srcDir, relativePath, filename);
 
       //如果不是.md文件,则直接进行复制
-      if (!filename.indexOf(".md") != -1) {
-        fileUtil.cp(path.join(srcDir,relativePath),path.join(targetDir,relativePath));
+      if (!(filename.indexOf(".md") != -1)) {
+        fileUtil.cp(
+          path.join(srcDir, relativePath),
+          path.join(targetDir, relativePath)
+        );
         return;
       }
 
@@ -80,7 +83,7 @@ exports.startToBuild = function(srcDir, targetDir) {
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
       //生成toc目录
-      var tocHtml = getTocHtml(titleList);
+      var tocHtml = fileUtil.getTocHtml(titleList);
 
       //进行模板的参数替换
       var html = tempalte;
@@ -102,7 +105,7 @@ exports.startToBuild = function(srcDir, targetDir) {
       var targetFile = path
         .join(targetDir, relativePath)
         .replace(".md", ".html");
-      fs.writeFile(
+      fs.writeFileSync(
         targetFile,
         minify(html, {
           removeComments: true,
@@ -123,11 +126,6 @@ exports.startToBuild = function(srcDir, targetDir) {
     function(srcDir, relativePath, filename) {
       //目录回调(返回false则该目录不继续遍历)
       console.log(srcDir, relativePath, filename);
-
-      // 排除css和js文件夹
-      if(filename.indexOf("css")!=-1||filename.indexOf("js")!=-1){
-        return;
-      }
 
       //在target目录下生成对应的文件夹
       fs.mkdirSync(path.join(targetDir, relativePath));
