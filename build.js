@@ -1,24 +1,26 @@
-//git网址
-var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-//原笔记存放路径
-var srcDir = "C:\\Users\\Administrator\\Desktop\\buff";
-//html生成路径
-var targetDir = "C:\\Users\\Administrator\\Desktop";
+// //git网址
+// var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+// //原笔记存放路径
+// var srcDir = "C:\\Users\\Administrator\\Desktop\\buff";
+// //html生成路径
+// var targetDir = "C:\\Users\\Administrator\\Desktop";
 
 const path = require("path");
 const fileUtil = require("./util/fileutil"); //获取文件工具
 const gitUtil = require("./util/gitutil"); //获取git工具
+const mdToHtml = require("./util/mdtohtml"); //获取md构建工具
 
-//git clone笔记
-gitUtil.gitclone(gitUrl, srcDir);
+exports.startToBuild = function(gitUrl,srcDir,targetDir) {
+  //git clone笔记
+//   gitUtil.gitclone(gitUrl, srcDir);
 
-// 删除目标路径下的所有文件
-fileUtil.rm(targetDir);
+  // 删除目标路径下的所有文件
+  fileUtil.rm(targetDir);
 
-// 复制css和js到目标路径下
-fileUtil.cp(path.join(srcDir, "css"), path.join(targetDir, "css"));
+  // 将当前项目下的css和js复制到目标路径下
+  fileUtil.cp(path.join("./", "css"), path.join(targetDir, "css"));
+  fileUtil.cp(path.join("./", "js"), path.join(targetDir, "js"));
 
-// 同步读取 模板内容
-// 同步读取 目录结构
-// 同步读取 笔记的所有内容并缓存
-// 构建html笔记(包括index.html)
+  //开始构建并生成html
+  mdToHtml.startToBuild(srcDir, targetDir);
+};

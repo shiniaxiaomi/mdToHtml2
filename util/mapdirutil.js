@@ -12,6 +12,10 @@ function _mapDir(srcDir, relativePath, fileCallback, dirCallback) {
       var buffPath = path.join(relativePath, filename); //拼接文件相对路径
       fs.stat(path.join(srcDir, buffPath), (err, stats) => {
         if (stats.isDirectory()) {
+          //排除.git目录
+          if (filename.indexOf(".git") !== -1) {
+            return;
+          }
           var flag = dirCallback(srcDir, buffPath, filename);
           if (flag == undefined || flag == true) {
             _mapDir(srcDir, buffPath, fileCallback, dirCallback);
@@ -22,7 +26,7 @@ function _mapDir(srcDir, relativePath, fileCallback, dirCallback) {
       });
     });
   });
-};
+}
 
 function _mapDirSync(srcDir, relativePath, fileCallback, dirCallback) {
   //读取目录
@@ -35,15 +39,19 @@ function _mapDirSync(srcDir, relativePath, fileCallback, dirCallback) {
     var buffPath = path.join(relativePath, filename); //拼接文件相对路径
     var stats = fs.statSync(path.join(srcDir, buffPath));
     if (stats.isDirectory()) {
+      //排除.git目录
+      if (filename.indexOf(".git") != -1) {
+        return;
+      }
       var flag = dirCallback(srcDir, buffPath, filename);
       if (flag == undefined || flag == true) {
-        mapDir(srcDir, buffPath, fileCallback, dirCallback);
+        _mapDirSync(srcDir, buffPath, fileCallback, dirCallback);
       }
     } else if (stats.isFile()) {
       fileCallback(srcDir, buffPath, filename);
     }
   });
-};
+}
 
 //遍历目录,到每个目录或文件的时候回调
 exports.mapDir = function(srcDir, relativePath, fileCallback, dirCallback) {
@@ -51,7 +59,7 @@ exports.mapDir = function(srcDir, relativePath, fileCallback, dirCallback) {
 };
 
 //遍历目录,到每个目录或文件的时候回调
-exports.mapDirSync = function (srcDir, relativePath, fileCallback, dirCallback) {
+exports.mapDirSync = function(srcDir, relativePath, fileCallback, dirCallback) {
   _mapDirSync(srcDir, relativePath, fileCallback, dirCallback);
 };
 

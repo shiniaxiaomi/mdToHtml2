@@ -2,42 +2,60 @@ const fs = require("fs");
 const shell = require("shelljs");
 const path = require("path");
 const mapDirUtil = require("./mapdirutil");
+const minify = require("html-minifier").minify; //文本压缩
+
+//构建并生成对应的index.html
+function buildIndexHtml(srcDir,targetDir,dirHtml) {
+  var template = fs.readFileSync(path.join(srcDir,"/html/index.html")).toString();
+  //进行模板的参数替换
+  var indexHtml = template
+    .replace("#{sidebar-file}", dirHtml);
+
+    fs.writeFileSync(path.join(targetDir,"index.html"),
+      minify(indexHtml, {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      })
+    ); //开启文本压缩
+}
 
 //获取目录的html
 function getDirHtml(srcDir, targetDir) {
   var dirData = getDirData(srcDir, targetDir);
-  var dirHtml = "";
+  var dirHtml = {str:""};
   buildDirDataToHtml(dirData, dirHtml);
-  return dirHtml;
+  return dirHtml.str;
 }
 
 //构建html
 function buildDirDataToHtml(dirData, dirHtml) {
   if (dirData.isDir) {
     if (dirData.children.length == 0) {
-      dirHtml +=
+      dirHtml.str +=
         "<li><a class='folder' href='#'><i class='iconfont icon-folder'></i><div>" +
         dirData.name +
         "</div></a></li>";
     } else {
-      if (dirData.name == "总文件") {
+      if (dirData.name == "总目录") {
         dirData.children.map(item => {
           buildDirDataToHtml(item, dirHtml);
         });
       } else {
-        dirHtml +=
+        dirHtml.str +=
           "<li><a class='folder' href='#'><i class='iconfont icon-down'></i><i class='iconfont icon-folder'></i><div>" +
           dirData.name +
           "</div></a></li><ul>";
         dirData.children.map(item => {
           buildDirDataToHtml(item, dirHtml);
         });
-        dirHtml += "</ul>";
+        dirHtml.str += "</ul>";
       }
     }
   } else {
     //文件
-    dirHtml +=
+    dirHtml.str +=
       "<li></i><a href='" +
       dirData.link +
       "'><i class='iconfont icon-file'></i><div>" +
@@ -56,28 +74,8 @@ function getDirData(srcDir, targetDir) {
     children: []
   };
 
-  //生成目录信息
-  mapDirUtil.mapDirSync(
-    srcDir, //src路径
-    "./", //当前目录(生成文件的相对路径)
-    function(srcDir, relativePath, filename) {
-      //生成目录数据
-      dirData.push({
-        isDir: false,
-        name: filename,
-        children: [],
-        link: path.join(targetDir, relativePath).replace(".md", ".html")
-      });
-    },
-    function(srcDir, relativePath, filename) {
-      //生成目录数据
-      dirData.push({
-        isDir: true,
-        name: filename,
-        children: []
-      });
-    }
-  );
+  //生成目录结构数据到dirData中
+  _getDirData(srcDir,targetDir,"",dirData);
 
   //调整dir的目录结构,将文件夹排在最上面
   var buff = {
@@ -106,6 +104,39 @@ function getDirData(srcDir, targetDir) {
   return buff;
 }
 
+function _getDirData(srcDir,targetDir,relativePath,dirData){
+  var files=fs.readdirSync(path.join(srcDir,relativePath));
+  files.map(item=>{
+    var buff=relativePath;//暂存原来的相对路径
+    relativePath=path.join(relativePath,item);//更新相对路径
+    var stat=fs.statSync(path.join(srcDir,relativePath));
+    if(stat.isDirectory()){//是文件夹则继续遍历
+      // 排除.git仓库目录
+      if(item.indexOf(".git")!=-1){
+        relativePath=buff;//恢复原来的相对路径
+        return;
+      }
+      var dirBuff={
+        isDir:true,
+        name:item,
+        link:path.join(targetDir,relativePath),
+        children:[]
+      };
+      dirData.children.push(dirBuff)
+      _getDirData(srcDir,targetDir,relativePath,dirBuff);
+    }else{
+      dirData.children.push({
+        isDir: false,
+        name: item,
+        link:path.join(targetDir,relativePath).replace(".md",".html")
+      })
+    }
+    relativePath=buff;//恢复原来的相对路径
+  })
+ 
+
+}
+
 //删除目录
 exports.rm = function(dir) {
   if (!fs.existsSync(dir)) {
@@ -113,6 +144,7 @@ exports.rm = function(dir) {
     return;
   }
   shell.rm("-rf", dir); //强制递归删除目录
+  shell.mkdir(dir);//创建原目录文件夹
 };
 
 //复制目录
@@ -128,3 +160,8 @@ exports.cp = function(srcDir, targetDir) {
 exports.getDirHtml = function(srcDir, targetDir) {
   return getDirHtml(srcDir, targetDir);
 };
+
+//构建并生成index.html
+exports.buildIndexHtml=function(srcDir,targetDir,dirHtml){
+  buildIndexHtml(srcDir,targetDir,dirHtml);
+}
