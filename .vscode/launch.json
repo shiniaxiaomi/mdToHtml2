@@ -21,6 +21,12 @@
       "request": "launch",
       "name": "test.js",
       "program": "${workspaceFolder}\\test.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "gitutil.js",
+      "program": "${workspaceFolder}\\util\\gitutil.js"
     }
   ]
 }

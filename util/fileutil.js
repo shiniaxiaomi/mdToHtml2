@@ -5,25 +5,32 @@ const mapDirUtil = require("./mapdirutil");
 const minify = require("html-minifier").minify; //文本压缩
 
 //构建并生成对应的index.html
-function buildIndexHtml(srcDir, targetDir, dirHtml) {
+function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
   var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
   //进行模板的参数替换
-  var indexHtml = template.replace("#{sidebar-file}", dirHtml);
+  var indexHtml = template
+    .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+    .replace("#{sidebar-file}", dirHtml);
 
-  fs.writeFileSync(
-    path.join(targetDir, "index.html"),
-    minify(indexHtml, {
-      removeComments: true,
-      collapseWhitespace: true,
-      minifyJS: true,
-      minifyCSS: true
-    })
-  ); //开启文本压缩
+  try {
+    fs.writeFileSync(
+      path.join(targetDir, "index.html"),
+      // indexHtml
+      minify(indexHtml, {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      })
+    ); //开启文本压缩
+  } catch (err) {
+    console.log("html文本压缩错误:" + err);
+  }
 }
 
 //获取目录的html
-function getDirHtml(srcDir, targetDir) {
-  var dirData = getDirData(srcDir, targetDir);
+function getDirHtml(srcDir, targetDir, staticPath) {
+  var dirData = getDirData(srcDir, targetDir, staticPath);
   var dirHtml = { str: "" };
   buildDirDataToHtml(dirData, dirHtml);
   return dirHtml.str;
@@ -65,7 +72,7 @@ function buildDirDataToHtml(dirData, dirHtml) {
 }
 
 //获取dirData对象
-function getDirData(srcDir, targetDir) {
+function getDirData(srcDir, targetDir, staticPath) {
   //保存目录信息
   var dirData = {
     isDir: true,
@@ -75,7 +82,7 @@ function getDirData(srcDir, targetDir) {
   };
 
   //生成目录结构数据到dirData中
-  _getDirData(srcDir, targetDir, "", dirData);
+  _getDirData(srcDir, targetDir, "", dirData, staticPath);
 
   //调整dir的目录结构,将文件夹排在最上面
   var buff = {
@@ -86,7 +93,7 @@ function getDirData(srcDir, targetDir) {
   buff.children.push({
     isDir: false,
     name: "首页",
-    link: path.join(targetDir, "index.html")
+    link: staticPath + "/" + path.join("index.html")
   });
   dirData.children.map(item => {
     //文件夹
@@ -104,7 +111,7 @@ function getDirData(srcDir, targetDir) {
   return buff;
 }
 
-function _getDirData(srcDir, targetDir, relativePath, dirData) {
+function _getDirData(srcDir, targetDir, relativePath, dirData, staticPath) {
   var files = fs.readdirSync(path.join(srcDir, relativePath));
   files.map(item => {
     var buff = relativePath; //暂存原来的相对路径
@@ -113,23 +120,23 @@ function _getDirData(srcDir, targetDir, relativePath, dirData) {
     if (stat.isDirectory()) {
       //是文件夹则继续遍历
       // 排除.git仓库目录
-      if (item.indexOf(".git") != -1) {
+      if (item == ".git" || item == ".img") {
         relativePath = buff; //恢复原来的相对路径
         return;
       }
       var dirBuff = {
         isDir: true,
         name: item,
-        link: path.join(targetDir, relativePath),
+        link: staticPath + "/" + path.join(relativePath),
         children: []
       };
       dirData.children.push(dirBuff);
-      _getDirData(srcDir, targetDir, relativePath, dirBuff);
+      _getDirData(srcDir, targetDir, relativePath, dirBuff, staticPath);
     } else {
       dirData.children.push({
         isDir: false,
         name: item,
-        link: path.join(targetDir, relativePath).replace(".md", ".html")
+        link: staticPath + "/" + path.join(relativePath).replace(".md", ".html")
       });
     }
     relativePath = buff; //恢复原来的相对路径
@@ -160,7 +167,13 @@ function buildTocObj(titleData, start, end, level, srcData) {
 function buildTocHtml(titleData, titleHtml) {
   if (titleData.children.length == 0) {
     titleHtml.str +=
-      `<li><a href="#` + titleData.text + `">` + titleData.text + `</a></li>`;
+      `<li><a href="#` +
+      titleData.text +
+      `_` +
+      titleData.level +
+      `">` +
+      titleData.text +
+      `</a></li>`;
     return;
   }
 
@@ -168,6 +181,8 @@ function buildTocHtml(titleData, titleHtml) {
     titleHtml.str +=
       `<li><a href="#` +
       titleData.text +
+      `` +
+      titleData.level +
       `">` +
       titleData.text +
       `</a></li><ul>`;
@@ -215,11 +230,16 @@ exports.cp = function(srcDir, targetDir) {
 };
 
 //获取目录的html结构
-exports.getDirHtml = function(srcDir, targetDir) {
-  return getDirHtml(srcDir, targetDir);
+exports.getDirHtml = function(srcDir, targetDir, staticPath) {
+  return getDirHtml(srcDir, targetDir, staticPath);
 };
 
 //构建并生成index.html
-exports.buildIndexHtml = function(srcDir, targetDir, dirHtml) {
-  buildIndexHtml(srcDir, targetDir, dirHtml);
+exports.buildIndexHtml = function(srcDir, targetDir, dirHtml, staticPath) {
+  buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
+};
+
+//递归创建目录
+exports.mkdir = function(dir) {
+  shell.mkdir("-p", dir);
 };

@@ -13,7 +13,7 @@ function _mapDir(srcDir, relativePath, fileCallback, dirCallback) {
       fs.stat(path.join(srcDir, buffPath), (err, stats) => {
         if (stats.isDirectory()) {
           //排除.git目录
-          if (filename.indexOf(".git") !== -1) {
+          if (filename == ".git") {
             return;
           }
           var flag = dirCallback(srcDir, buffPath, filename);
@@ -40,7 +40,7 @@ function _mapDirSync(srcDir, relativePath, fileCallback, dirCallback) {
     var stats = fs.statSync(path.join(srcDir, buffPath));
     if (stats.isDirectory()) {
       //排除.git目录
-      if (filename.indexOf(".git") != -1) {
+      if (filename == ".git") {
         return;
       }
       var flag = dirCallback(srcDir, buffPath, filename);

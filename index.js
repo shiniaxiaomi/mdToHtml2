@@ -4,14 +4,17 @@ const path = require("path");
 const build = require("./build"); //获取构建对象
 
 //git网址
-var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+// var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+var gitUrl = "https://github.com/shiniaxiaomi/note.git";
 //原笔记存放路径
 var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
 //html生成路径
 var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+//静态资源路径
+var staticPath = "http://localhost:8081";
 
 //构建笔记html
-build.startToBuild(gitUrl, srcDir, targetDir);
+build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
 
 //设置静态资源路径(将html生成路径设置为静态资源路径)
 app.use("", express.static(targetDir));

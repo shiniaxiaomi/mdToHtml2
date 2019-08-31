@@ -15,6 +15,20 @@ renderer.link = function(href, title, text) {
 
 //渲染h1-h6标签时的回调
 renderer.heading = function(text, level) {
+  //如果标题中有a标签,则将a标签放到h标签的下面
+  if (text.indexOf("<a") != -1) {
+    var url = text.match("href=.* ")[0];
+    url = url.substring(6, url.length - 2);
+    var str = text.match(">.*<")[0];
+    text = str.substring(1, str.length - 1);
+    //暂存标签,用于生成大纲
+    titleList.push({
+      level: level,
+      text: text
+    });
+    return `<h${level} id="${text}_${level}"><a href="${url}" target="_blank">${text}</a></h${level}>`;
+  }
+
   //暂存标签,用于生成大纲
   titleList.push({
     level: level,
@@ -50,14 +64,14 @@ var noteData = {}; //存放note的原数据
 var titleList = []; //暂存h1-h6标签的内容
 var dirHtml = ""; //目录的html结构
 
-exports.startToBuild = function(srcDir, targetDir) {
+exports.startToBuild = function(srcDir, targetDir, staticPath) {
   // 同步读取 模板内容
   tempalte = fs
     .readFileSync(path.join(__dirname, "..", "/html/template.html"))
     .toString();
 
   //获取目录的html结构
-  dirHtml = fileUtil.getDirHtml(srcDir, targetDir);
+  dirHtml = fileUtil.getDirHtml(srcDir, targetDir, staticPath);
 
   //遍历原笔记目录
   mapDirUtil.mapDirSync(
@@ -97,6 +111,7 @@ exports.startToBuild = function(srcDir, targetDir) {
         .replace("#{title}", filename)
         .replace("#{keywords}", filename)
         .replace("#{content}", filename)
+        .replace(new RegExp("#{staticPath}", "gm"), staticPath)
         .replace("#{sidebar-toc}", tocHtml)
         .replace("#{sidebar-file}", dirHtml)
         .replace("#{body}", noteHtml);
@@ -105,18 +120,24 @@ exports.startToBuild = function(srcDir, targetDir) {
       var targetFile = path
         .join(targetDir, relativePath)
         .replace(".md", ".html");
-      fs.writeFileSync(
-        targetFile,
-        minify(html, {
-          removeComments: true,
-          collapseWhitespace: true,
-          minifyJS: true,
-          minifyCSS: true
-        }), //开启文本压缩
-        function(err) {
-          console.log(targetFile + "生成成功!");
-        }
-      );
+
+      try {
+        fs.writeFileSync(
+          targetFile,
+          // html,
+          minify(html, {
+            removeComments: true,
+            collapseWhitespace: true,
+            minifyJS: true,
+            minifyCSS: true
+          }), //开启文本压缩
+          function(err) {
+            console.log(targetFile + "生成成功!");
+          }
+        );
+      } catch (err) {
+        console.log("html文本压缩错误:" + err);
+      }
 
       //清空数据
       titleList = [];
@@ -128,10 +149,10 @@ exports.startToBuild = function(srcDir, targetDir) {
       console.log(srcDir, relativePath, filename);
 
       //在target目录下生成对应的文件夹
-      fs.mkdirSync(path.join(targetDir, relativePath));
+      fileUtil.mkdir(path.join(targetDir, relativePath));
     }
   );
 
   //生成index.html
-  fileUtil.buildIndexHtml(srcDir, targetDir, dirHtml);
+  fileUtil.buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
 };
