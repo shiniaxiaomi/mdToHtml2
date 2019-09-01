@@ -134,19 +134,16 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
       try {
         fs.writeFileSync(
           targetFile,
-          html,
+          html
           // minify(html, {
           //   removeComments: true,
           //   collapseWhitespace: true,
           //   minifyJS: true,
           //   minifyCSS: true
           // }), //开启文本压缩
-          function(err) {
-            console.log(targetFile + "生成成功!");
-          }
         );
       } catch (err) {
-        console.log("html文本压缩错误:" + err);
+        console.log("html文件写入失败:" + err);
       }
 
       //清空数据

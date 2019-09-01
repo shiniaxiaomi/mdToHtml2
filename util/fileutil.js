@@ -24,7 +24,7 @@ function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
       // })
     ); //开启文本压缩
   } catch (err) {
-    console.log("html文本压缩错误:" + err);
+    console.log("html文件写入失败:" + err);
   }
 }
 
