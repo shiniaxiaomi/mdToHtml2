@@ -14,7 +14,7 @@ var srcDir = "/note";
 //html生成路径
 var targetDir = "/html";
 //静态资源路径
-var staticPath = "http://luyingjie.cn";
+var staticPath = "http://47.105.165.211";
 
 //构建笔记html
 var buildOutput = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
