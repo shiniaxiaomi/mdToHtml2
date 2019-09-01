@@ -134,13 +134,13 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
       try {
         fs.writeFileSync(
           targetFile,
-          // html,
-          minify(html, {
-            removeComments: true,
-            collapseWhitespace: true,
-            minifyJS: true,
-            minifyCSS: true
-          }), //开启文本压缩
+          html,
+          // minify(html, {
+          //   removeComments: true,
+          //   collapseWhitespace: true,
+          //   minifyJS: true,
+          //   minifyCSS: true
+          // }), //开启文本压缩
           function(err) {
             console.log(targetFile + "生成成功!");
           }
