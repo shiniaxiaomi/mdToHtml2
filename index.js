@@ -27,7 +27,7 @@ if (buildOutput.flag == false) {
 app.use("", express.static(targetDir));
 
 //启动server并监听再8081端口
-var server = app.listen(8081, function() {
+var server = app.listen(80, function() {
   console.log("应用实例启动成功!");
 });
 
