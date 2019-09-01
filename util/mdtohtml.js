@@ -15,6 +15,9 @@ renderer.link = function(href, title, text) {
 
 //渲染h1-h6标签时的回调
 renderer.heading = function(text, level) {
+  var titleId = Math.random()
+    .toString()
+    .substr(3, 15);
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
     var url = text.match("href=.* ")[0];
@@ -24,17 +27,20 @@ renderer.heading = function(text, level) {
     //暂存标签,用于生成大纲
     titleList.push({
       level: level,
-      text: text
+      text: text,
+      id: titleId
     });
-    return `<h${level} id="${text}_${level}"><a href="${url}" target="_blank">${text}</a></h${level}>`;
+    return `<h${level} id="${titleId}"><a href="${url}" target="_blank">${text}</a></h${level}>`;
   }
 
   //暂存标签,用于生成大纲
   titleList.push({
     level: level,
-    text: text
+    text: text,
+    id: titleId
   });
-  return `<h${level} id="${text}_${level}">${text}</h${level}>`;
+
+  return `<h${level} id="${titleId}">${text}</h${level}>`;
 };
 
 //设置markdown解析
@@ -79,7 +85,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
     "./", //当前目录(生成文件的相对路径)
     function(srcDir, relativePath, filename) {
       //文件回调
-      console.log(srcDir, relativePath, filename);
+      // console.log(srcDir, relativePath, filename);
 
       //如果不是.md文件,则直接进行复制
       if (!(filename.indexOf(".md") != -1)) {
@@ -106,7 +112,11 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
         noteHtml = noteHtml.replace("[TOC]", "");
         //替换toc目录
         html = html.replace("#{top-toc}", tocHtml);
+      } else {
+        //替换toc目录
+        html = html.replace("#{top-toc}", ""); //清空toc标记为
       }
+
       html = html
         .replace("#{title}", filename)
         .replace("#{keywords}", filename)
@@ -146,7 +156,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
     },
     function(srcDir, relativePath, filename) {
       //目录回调(返回false则该目录不继续遍历)
-      console.log(srcDir, relativePath, filename);
+      // console.log(srcDir, relativePath, filename);
 
       //在target目录下生成对应的文件夹
       fileUtil.mkdir(path.join(targetDir, relativePath));

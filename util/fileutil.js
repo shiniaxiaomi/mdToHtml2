@@ -150,6 +150,7 @@ function buildTocObj(titleData, start, end, level, srcData) {
       var titleBuff = {
         level: srcData[i].level,
         text: srcData[i].text,
+        id: srcData[i].id,
         children: []
       };
       titleData.children.push(titleBuff);
@@ -167,25 +168,13 @@ function buildTocObj(titleData, start, end, level, srcData) {
 function buildTocHtml(titleData, titleHtml) {
   if (titleData.children.length == 0) {
     titleHtml.str +=
-      `<li><a href="#` +
-      titleData.text +
-      `_` +
-      titleData.level +
-      `">` +
-      titleData.text +
-      `</a></li>`;
+      `<li><a href="#` + titleData.id + `">` + titleData.text + `</a></li>`;
     return;
   }
 
   if (titleData.level != -1) {
     titleHtml.str +=
-      `<li><a href="#` +
-      titleData.text +
-      `` +
-      titleData.level +
-      `">` +
-      titleData.text +
-      `</a></li><ul>`;
+      `<li><a href="#` + titleData.id + `">` + titleData.text + `</a></li><ul>`;
   }
 
   titleData.children.map(item => {
@@ -198,8 +187,14 @@ function buildTocHtml(titleData, titleHtml) {
 
 //构建并生成toc目录的html数据
 exports.getTocHtml = function(srcData) {
+  if (srcData.length == 0) {
+    return "";
+  }
   var titleData = {
     level: -1,
+    id: Math.random()
+      .toString()
+      .substr(3, 15),
     children: []
   };
   buildTocObj(titleData, 0, srcData.length, 1, srcData);
