@@ -11,11 +11,11 @@ window.onload = function() {
   //为所有目录添加监听器
   folderList = document.querySelectorAll(".folder");
   folderList.forEach(ele => ele.addEventListener("click", folderClick));
-  //initialize
 
-  // folderList.forEach(elm => {
-  //   folderClick.call(elm);
-  // });
+  //initialize(关闭所有文件夹)
+  folderList.forEach(elm => {
+    folderClick.call(elm);
+  });
 };
 function changeTopButton(type) {
   if (type === "file") {
@@ -33,11 +33,12 @@ function changeTopButton(type) {
 }
 function folderClick() {
   //子级的隐藏和显示
-  let display = this.parentElement.nextElementSibling.style.display;
-  if (this.parentElement.nextElementSibling.tagName.indexOf("UL") != -1) {
-    this.parentElement.nextElementSibling.style.display =
-      display === "block" || display === "" ? "none" : "block";
+  if (this.nextElementSibling == null) {
+    return;
   }
+  let display = this.nextElementSibling.style.display;
+  this.nextElementSibling.style.display =
+    display === "block" || display === "" ? "none" : "block";
 
   //文件夹箭头的变动
   var down = this.querySelector(".icon-down");

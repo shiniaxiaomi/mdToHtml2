@@ -41,7 +41,7 @@ function buildDirDataToHtml(dirData, dirHtml) {
   if (dirData.isDir) {
     if (dirData.children.length == 0) {
       dirHtml.str +=
-        "<li><a class='folder' href='#'><i class='iconfont icon-folder'></i><div>" +
+        "<li><a class='folder' href='javascript:void(0);'><i class='iconfont icon-folder'></i><div>" +
         dirData.name +
         "</div></a></li>";
     } else {
@@ -51,7 +51,7 @@ function buildDirDataToHtml(dirData, dirHtml) {
         });
       } else {
         dirHtml.str +=
-          "<li><a class='folder' href='#'><i class='iconfont icon-down'></i><i class='iconfont icon-folder'></i><div>" +
+          "<li><a class='folder' href='javascript:void(0);'><i class='iconfont icon-down'></i><i class='iconfont icon-folder'></i><div>" +
           dirData.name +
           "</div></a><ul>";
         dirData.children.map(item => {
