@@ -53,11 +53,11 @@ function buildDirDataToHtml(dirData, dirHtml) {
         dirHtml.str +=
           "<li><a class='folder' href='#'><i class='iconfont icon-down'></i><i class='iconfont icon-folder'></i><div>" +
           dirData.name +
-          "</div></a></li><ul>";
+          "</div></a><ul>";
         dirData.children.map(item => {
           buildDirDataToHtml(item, dirHtml);
         });
-        dirHtml.str += "</ul>";
+        dirHtml.str += "</ul></li>";
       }
     }
   } else {
@@ -174,14 +174,14 @@ function buildTocHtml(titleData, titleHtml) {
 
   if (titleData.level != -1) {
     titleHtml.str +=
-      `<li><a href="#` + titleData.id + `">` + titleData.text + `</a></li><ul>`;
+      `<li><a href="#` + titleData.id + `">` + titleData.text + `</a><ul>`;
   }
 
   titleData.children.map(item => {
     buildTocHtml(item, titleHtml);
   });
   if (titleData.level != -1) {
-    titleHtml.str += `</ul>`;
+    titleHtml.str += `</ul></li>`;
   }
 }
 
