@@ -72,7 +72,6 @@ function syncClick() {
       if (xhr.status == 200) {
         var response = eval("(" + xhr.responseText + ")");
         if (response.flag == 1) {
-          document.getElementById("syncTip").style.display = "none";
           //成功
           alert("笔记同步成功");
         } else {
@@ -82,6 +81,7 @@ function syncClick() {
       } else {
         alert("服务器内部错误");
       }
+      document.getElementById("syncTip").style.display = "none";
     }
   };
 }

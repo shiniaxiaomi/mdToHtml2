@@ -6,15 +6,17 @@ var app = express(); //获取app对象
 const path = require("path");
 const build = require("./build"); //获取构建对象
 
-//git网址
-// var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-var gitUrl = "https://github.com/shiniaxiaomi/note.git";
-//原笔记存放路径
-var srcDir = "/note";
-//html生成路径
-var targetDir = "/html";
-//静态资源路径
-var staticPath = "http://47.105.165.211";
+//linux
+// var gitUrl = "https://github.com/shiniaxiaomi/note.git";//git网址
+// var srcDir = "/note";//原笔记存放路径
+// var targetDir = "/html";//html生成路径
+// var staticPath = "http://47.105.165.211";//静态资源路径
+
+//本地
+var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+var staticPath = "http://localhost";
 
 //构建笔记html
 var buildOutput = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
@@ -26,7 +28,7 @@ if (buildOutput.flag == false) {
 //设置静态资源路径(将html生成路径设置为静态资源路径)
 app.use("", express.static(targetDir));
 
-//启动server并监听再8081端口
+//启动server并监听再80端口
 var server = app.listen(80, function() {
   console.log("应用实例启动成功!");
 });

@@ -16,11 +16,7 @@
       type="text/css"
       href="#{staticPath}/css/highlight.css"
     />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="#{staticPath}/css/user.css"
-    />
+    <link rel="stylesheet" type="text/css" href="#{staticPath}/css/user.css" />
     <link
       rel="stylesheet"
       href="https://at.alicdn.com/t/font_1374216_5867iv410a9.css"
@@ -56,7 +52,23 @@
       <div id="top-file" class="top-file">#{sidebar-file}</div>
     </div>
 
-    <div id="syncTip" style="display:none">笔记同步中...</div>
+    <div
+      id="syncTip"
+      style="text-align: center;
+  position: fixed;
+  left: 250px;
+  right: 0;
+  top: 30%;
+  transform: translateY(-50%);
+  border: none;
+  display:none"
+    >
+      <span
+        style="font-size: 35px;
+      font-weight: bold;"
+        >笔记同步中...</span
+      >
+    </div>
 
     <div class="top-container">
       <h1>陆英杰的博客</h1>
