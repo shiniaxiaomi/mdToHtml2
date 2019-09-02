@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .search{
+        border: 1px solid transparent;
+        width: 400px;
+        height: 80px;
+        margin: 0 auto;
+    }
+    .search input{
+        border: 1px solid gray;
+        width: 400px;
+        height: 40px;
+    }
+    .content{
+        width: 200px;
+    /* height: 80px; */
+        border: 1px solid red;
+        overflow-y: auto;
+        max-height: 150px;
+    }
+    .content p {
+        height: 20px;
+    }
+</style>
+<body onload="onload()">
+    <div class="search">
+        <input id="input" type="text" placeholder="请输入" onfocus="showDiv()" oninput="filterP()">
+        <div id="dataList" class="content" onclick="pushInput()" style="display:none;">
+            <p>123</p>
+            <p>159</p>
+            <p>147</p>
+            <p>163</p>
+        </div>
+    </div>
+    <script>
+        var dataArr = [];//保存文件名称的数组
+        var dataList = document.getElementById('dataList');
+        function onload() {  //初始化dataArr的数据
+            var childs = dataList.children;  //在IE下注释也算节点,不能用于
+            for (var i = 0; i < childs.length; i++) {
+                dataArr.push(childs[i].innerText);
+            }
+            console.log(dataArr);
+        }
+        function showDiv() {
+            dataList.style.display = "";
+        }
+        function filterP() {
+            var e = event.target || event.srcElement;
+            var str = e.value;
+            console.log(str);
+            dataList.innerHTML = '';  //清空div下的所有P元素
+            dataArr.forEach(function (item) {
+                if (item.indexOf(str) != -1) {
+                    var p = document.createElement('p');
+                    var text = document.createTextNode(item);
+                    p.appendChild(text);
+                    dataList.appendChild(p);
+                }
+            })
+            console.log("dataList.innerHTML：" + dataList.innerHTML)
+            if (dataList.innerHTML == '') {
+                var p = document.createElement('p');
+                var text = document.createTextNode('暂无数据');
+                p.style.color = '#d7d7d7';
+                p.onclick = function () { event.stopImmediatePropagation(); }  //阻止事件的冒泡
+                p.appendChild(text);
+                dataList.appendChild(p);
+            }
+        }
+        function pushInput() { //利用事件委托机制,获取点击的P源
+            var e = event.target || event.srcElement;
+            var input = document.getElementById('input');
+            input.value = e.innerText;
+            dataList.style.display = 'none';
+        }
+/**
+   stopImmediatePropagation() 和 stopPropagation()的区别在哪儿呢？
+　　后者只会阻止冒泡或者是捕获。 但是前者除此之外还会阻止该元素的其他事件发生，但是后者就不会阻止其他事件的发生
+ **/
+    </script>
+</body>
+</html
