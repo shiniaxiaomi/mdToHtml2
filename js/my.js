@@ -64,12 +64,15 @@ function syncClick() {
   //发送请求
   var data = "password=" + password;
   xhr.send(data);
+  document.getElementById("syncTip").style.display = "block";
+  //waitting
   xhr.onreadystatechange = function() {
     //这步为判断服务器是否正确响应
     if (xhr.readyState == 4) {
       if (xhr.status == 200) {
         var response = eval("(" + xhr.responseText + ")");
         if (response.flag == 1) {
+          document.getElementById("syncTip").style.display = "none";
           //成功
           alert("笔记同步成功");
         } else {
