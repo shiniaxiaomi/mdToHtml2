@@ -27,7 +27,6 @@
       href="https://at.alicdn.com/t/font_1374216_5867iv410a9.css"
     />
     <script type="text/javascript" src="#{staticPath}/js/my.js"></script>
-    <script type="text/javascript" src="#{staticPath}/js/index.js"></script>
     <style>
       .searchDiv {
         border: 1px solid transparent;
@@ -37,6 +36,7 @@
         position: absolute;
         left: 36%;
         top: 25%;
+        z-index: 1000;
       }
       .searchDiv .searchInput {
         border: 1px solid gray;
@@ -59,7 +59,7 @@
       }
     </style>
   </head>
-  <body >
+  <body>
     <!-- 回到顶部的按钮 -->
     <a class="top" href="#header">
       <i class="iconfont icon-up"></i>
@@ -113,7 +113,16 @@
         placeholder="请输入"
         autocomplete="off"
       />
-      <div id="dataList" class="dataList" style="display:none;"></div>
+      <div id="dataList" class="dataList">
+        <div class="file">
+          <p>111</p>
+          <p>url</p>
+        </div>
+        <div class="title">
+          <p>111</p>
+          <p>url</p>
+        </div>
+      </div>
     </div>
 
     <div class="top-container">
@@ -123,4 +132,3 @@
     </div>
   </body>
 </html>
-

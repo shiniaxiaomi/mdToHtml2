@@ -3,23 +3,48 @@ let fileContent;
 let tocTitle;
 let tocContent;
 let folderList;
+
+let searchDiv; //搜索div
+let searchInput; //搜索输入框
+let dataList; //数据节点
+var index = -1; //标记现在选择的位置
+var pList = undefined; //存放p的数组
+var dataArr = []; //保存要搜索的数据的数组
+var initSearchDataBuff = undefined; //缓存搜索初始化的数据
 window.onload = function() {
-  fileTitle = document.querySelector("#top-buttons-file");
-  fileContent = document.querySelector("#top-file");
-  tocTitle = document.querySelector("#top-buttons-toc");
-  tocContent = document.querySelector("#top-content");
-  //为所有目录添加监听器
-  folderList = document.querySelectorAll(".folder");
-  folderList.forEach(ele => ele.addEventListener("click", folderClick));
+  //获取节点
+  getSidebarElement();
+  getSearchElement();
+
+  //添加事件
+  addSidebarEvent();
+  addSearchEvent();
+
+  //初始化搜索数据
+  initSearchData();
 
   //initialize(关闭所有文件夹)
   folderList.forEach(elm => {
     folderClick.call(elm);
   });
 };
+
+//===============文件夹和大纲
+//给侧边栏添加事件
+function addSidebarEvent() {
+  folderList = document.querySelectorAll(".folder");
+  folderList.forEach(ele => ele.addEventListener("click", folderClick));
+}
+//获取侧边栏的节点
+function getSidebarElement() {
+  fileTitle = document.querySelector("#top-buttons-file");
+  fileContent = document.querySelector("#top-file");
+  tocTitle = document.querySelector("#top-buttons-toc");
+  tocContent = document.querySelector("#top-content");
+}
+//文件和大纲的显示和隐藏
 function changeTopButton(type) {
   if (type === "file") {
-    //显示与隐藏
     fileTitle.classList.add("top-clicked");
     tocTitle.classList.remove("top-clicked");
     fileContent.style.display = "block";
@@ -31,6 +56,7 @@ function changeTopButton(type) {
     tocContent.style.display = "block";
   }
 }
+//文件夹的收缩和展开
 function folderClick() {
   //子级的隐藏和显示
   if (this.nextElementSibling == null) {
@@ -85,4 +111,178 @@ function syncClick() {
       document.getElementById("syncTip").style.display = "none";
     }
   };
+}
+
+//===============搜索框
+//给搜索框添加事件
+function addSearchEvent() {
+  //给输入框注册事件
+  searchInput.onfocus = function() {
+    dataList.style.display = "";
+  };
+  searchInput.oninput = function() {
+    searchKeywords(); //搜索关键字
+  };
+  searchInput.onkeydown = function(event) {
+    checkKeyCode(event);
+  };
+  searchDiv.onclick = function() {
+    searchInput.focus();
+  };
+
+  //注册Ctrl+P快捷键
+  var flag = true;
+  document.onkeydown = function(e) {
+    if (flag && e.ctrlKey && e.keyCode == 80) {
+      flag = false;
+      e.preventDefault(); //阻止默认事件
+    }
+  };
+  //在键盘弹起的时候触发事件
+  document.onkeyup = function(e) {
+    if (e.keyCode == 80) {
+      flag = true;
+      showSearchDiv(); //显示搜索输入框
+      e.preventDefault(); //阻止默认事件
+    } else if (e.keyCode == 27) {
+      hiddenSearchDiv();
+    }
+  };
+}
+//获取搜索框节点
+function getSearchElement() {
+  searchDiv = document.getElementById("searchDiv");
+  searchInput = document.getElementById("searchInput");
+  dataList = document.getElementById("dataList");
+}
+//初始化搜索数据
+function initSearchData() {
+  var fileBuff = document.querySelectorAll("#top-file .icon-file");
+  fileBuff.forEach(item => {
+    var node = {
+      content: item.nextElementSibling.innerText,
+      url: item.parentElement.getAttribute("href")
+    };
+    dataArr.push(node);
+  });
+  var titleBuff = document.querySelectorAll("#top-content a");
+  titleBuff.forEach(item => {
+    var node = {
+      content: item.innerText,
+      url: item.getAttribute("href")
+    };
+    dataArr.push(node);
+  });
+}
+
+//搜索弹窗显示和影藏
+function showSearchDiv() {
+  //首次显示,进行初始化
+  if (initSearchDataBuff == undefined) {
+    dataArr.forEach(function(item) {
+      var p = document.createElement("p");
+      var text = document.createTextNode(item.content);
+      p.appendChild(text);
+      p.setAttribute("url", item.url);
+      dataList.appendChild(p);
+    });
+    initSearchDataBuff = dataList.innerHTML;
+  } else {
+    dataList.innerHTML = initSearchDataBuff;
+  }
+
+  var display = searchDiv.style.display;
+  if (display == "none") {
+    searchDiv.style.display = "block";
+    searchInput.focus();
+  } else {
+    hiddenSearchDiv();
+  }
+
+  selectFirstSearchData(); //默认选中第一个
+}
+//隐藏搜索输入框
+function hiddenSearchDiv() {
+  searchDiv.style.display = "none";
+  searchInput.value = ""; //清空
+}
+
+//过滤和搜索信息
+function searchKeywords() {
+  var e = event.target || event.srcElement;
+  var str = e.value;
+  dataList.innerHTML = ""; //清空div下的所有P元素
+  if (str == "") {
+    dataList.innerHTML = initSearchDataBuff;
+  } else {
+    dataArr.forEach(function(item) {
+      if (item.content.indexOf(str) != -1) {
+        var p = document.createElement("p");
+        var text = document.createTextNode(item.content);
+        p.appendChild(text);
+        p.setAttribute("url", item.url);
+        dataList.appendChild(p);
+      }
+    });
+  }
+
+  //数据为空时,显示暂无数据
+  if (dataList.innerHTML == "") {
+    var p = document.createElement("p");
+    var text = document.createTextNode("暂无数据");
+    p.appendChild(text);
+    dataList.appendChild(p);
+  }
+
+  selectFirstSearchData(); //默认选中第一个
+}
+
+//默认选中第一个
+function selectFirstSearchData() {
+  //默认选择搜索的第一个值
+  pList = dataList.getElementsByTagName("p");
+  for (var i = 0; i < pList.length; i++) {
+    pList[i].classList = "";
+  }
+  pList[0].classList = "on";
+  index = 0;
+}
+
+function checkKeyCode(e) {
+  switch (e.keyCode) {
+    case 38: //上
+      if (index >= pList.length) {
+        index = pList.length - 1;
+      } else {
+        pList[index].className = ""; //将class置空
+        index--; //标记往上一个
+        if (index <= -1) {
+          index = 0;
+        }
+      }
+      pList[index].classList = "on"; //将class设置为on
+      event.preventDefault(); //阻止默认事件
+      break;
+    case 40: //下
+      if (index <= -1) {
+        index = 0;
+      } else {
+        pList[index].className = ""; //将class置空
+        index++;
+        if (index >= pList.length) {
+          index = pList.length - 1;
+        }
+      }
+      pList[index].classList = "on"; //将class设置为on
+      event.preventDefault(); //阻止默认事件
+      break;
+    case 13: //回车选择
+      if (index != -1) {
+        searchDiv.style.display = "none";
+        searchInput.value = ""; //清空文本
+        //打开对应的链接
+        window.location.href = pList[index].getAttribute("url");
+      }
+      break;
+  }
 }

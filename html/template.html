@@ -16,19 +16,17 @@
       type="text/css"
       href="#{staticPath}/css/highlight.css"
     />
+    <link rel="stylesheet" type="text/css" href="#{staticPath}/css/user.css" />
     <link
       rel="stylesheet"
       type="text/css"
-      href="#{staticPath}/css/user.css"
+      href="#{staticPath}/css/number.css"
     />
-    <link rel="stylesheet" type="text/css" href="#{staticPath}/css/number.css" />
     <link
       rel="stylesheet"
       href="https://at.alicdn.com/t/font_1374216_5867iv410a9.css"
     />
     <script type="text/javascript" src="#{staticPath}/js/my.js"></script>
-    <script type="text/javascript" src="#{staticPath}/js/index.js"></script>
-
     <style>
       .searchDiv {
         border: 1px solid transparent;
@@ -38,6 +36,7 @@
         position: absolute;
         left: 36%;
         top: 25%;
+        z-index: 1000;
       }
       .searchDiv .searchInput {
         border: 1px solid gray;
@@ -59,7 +58,6 @@
         color: #fff;
       }
     </style>
-
   </head>
   <body>
     <!-- 回到顶部的按钮 -->
@@ -99,7 +97,7 @@
         placeholder="请输入"
         autocomplete="off"
       />
-      <div id="dataList" class="dataList" style="display:none;"></div>
+      <div id="dataList" class="dataList"></div>
     </div>
 
     <div class="top-container">
