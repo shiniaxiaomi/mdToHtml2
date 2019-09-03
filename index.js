@@ -14,8 +14,10 @@ const build = require("./build"); //获取构建对象
 
 //本地
 var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+// var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
+var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+// var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
 var staticPath = "http://localhost";
 
 //构建笔记html

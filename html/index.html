@@ -27,8 +27,9 @@
       href="https://at.alicdn.com/t/font_1374216_5867iv410a9.css"
     />
     <script type="text/javascript" src="#{staticPath}/js/my.js"></script>
+    <script type="text/javascript" src="#{staticPath}/js/index.js"></script>
     <style>
-      .search {
+      .searchDiv {
         border: 1px solid transparent;
         width: 26%;
         height: 80px;
@@ -37,18 +38,18 @@
         left: 36%;
         top: 25%;
       }
-      .search input {
+      .searchDiv .searchInput {
         border: 1px solid gray;
         width: 100%;
         height: 40px;
         max-width: 500px;
       }
-      .content {
+      .dataList {
         border: 1px solid red;
         overflow-y: auto;
         max-height: 300px;
       }
-      .content p {
+      .dataList p {
         height: 20px;
       }
 
@@ -58,7 +59,7 @@
       }
     </style>
   </head>
-  <body onload="onload()">
+  <body >
     <!-- 回到顶部的按钮 -->
     <a class="top" href="#header">
       <i class="iconfont icon-up"></i>
@@ -90,13 +91,13 @@
     <div
       id="syncTip"
       style="text-align: center;
-  position: fixed;
-  left: 250px;
-  right: 0;
-  top: 30%;
-  transform: translateY(-50%);
-  border: none;
-  display:none"
+        position: fixed;
+        left: 250px;
+        right: 0;
+        top: 30%;
+        transform: translateY(-50%);
+        border: none;
+        display:none"
     >
       <span
         style="font-size: 35px;
@@ -105,24 +106,14 @@
       >
     </div>
 
-    <div id="search" class="search" style="display: none">
+    <div id="searchDiv" class="searchDiv" style="display: none">
       <input
-        id="input"
+        id="searchInput"
         type="text"
         placeholder="请输入"
-        onfocus="showDiv()"
-        oninput="filterP()"
         autocomplete="off"
-        onkeydown="checkKeyCode(event)"
       />
-      <div id="dataList" class="content" style="display:none;">
-        <p>123</p>
-        <p>159</p>
-        <p>123</p>
-        <p>147</p>
-        <p>123</p>
-        <p>163</p>
-      </div>
+      <div id="dataList" class="dataList" style="display:none;"></div>
     </div>
 
     <div class="top-container">
@@ -132,111 +123,4 @@
     </div>
   </body>
 </html>
-<script>
-  //Ctrl+P快捷键
-  var flag = true;
-  document.onkeydown = function(e) {
-    if (flag && e.ctrlKey && e.keyCode == 80) {
-      flag = false;
-      e.preventDefault(); //阻止默认事件
-    }
-  };
-  //在键盘弹起的时候触发事件
-  document.onkeyup = function(e) {
-    if (e.keyCode == 80) {
-      flag = true;
-      var searchDoc = document.getElementById("search");
-      var display = searchDoc.style.display;
-      document.getElementById("search").style.display =
-        display == "none" ? "block" : "none";
-      if (display == "none") {
-        document.getElementById("input").focus();
-      }
-      e.preventDefault(); //阻止默认事件
-    }
-  };
 
-  var dataArr = []; //保存文件名称的数组
-  var dataList = document.getElementById("dataList");
-  function onload() {
-    //初始化dataArr的数据
-    var childs = dataList.children; //在IE下注释也算节点,不能用于
-    for (var i = 0; i < childs.length; i++) {
-      dataArr.push(childs[i].innerText);
-    }
-    console.log(dataArr);
-  }
-  function showDiv() {
-    dataList.style.display = "";
-  }
-  function filterP() {
-    var e = event.target || event.srcElement;
-    var str = e.value;
-    console.log(str);
-    dataList.innerHTML = ""; //清空div下的所有P元素
-    dataArr.forEach(function(item) {
-      if (item.indexOf(str) != -1) {
-        var p = document.createElement("p");
-        var text = document.createTextNode(item);
-        p.appendChild(text);
-        // p.addEventListener("mouseenter", function() {
-        //   p.classList = "on";
-        // });
-        // p.addEventListener("mouseleave", function() {
-        //   p.className = "";
-        // });
-
-        dataList.appendChild(p);
-      }
-    });
-    console.log("dataList.innerHTML：" + dataList.innerHTML);
-    //数据为空时,显示暂无数据
-    if (dataList.innerHTML == "") {
-      var p = document.createElement("p");
-      var text = document.createTextNode("暂无数据");
-      p.style.color = "#d7d7d7";
-      p.onclick = function() {
-        event.stopImmediatePropagation();
-      }; //阻止事件的冒泡
-      p.appendChild(text);
-      dataList.appendChild(p);
-    }
-  }
-
-  var cur = -1; //标记现在选择的位置
-  function checkKeyCode(e) {
-    var as = document.getElementById("dataList").getElementsByTagName("p");
-    switch (e.keyCode) {
-      case 38: //上
-        if (cur == -1) cur = as.length - 1;
-        //如果到顶了,再往上就回到最下面
-        else {
-          as[cur].className = ""; //将class置空
-          cur--; //标记往上一个
-        }
-        if (cur < 0) cur = as.length - 1; //如果小于0,则到最下面
-        as[cur].classList = "on"; //将class设置为on
-        event.preventDefault(); //阻止默认事件
-        break;
-      case 40: //下
-        if (cur == -1) cur = 0;
-        else {
-          as[cur].className = ""; //将class置空
-          cur++;
-        }
-        if (cur >= as.length) cur = 0; //如果大于最大值,回到最上面
-        as[cur].classList = "on"; //将class设置为on
-        event.preventDefault(); //阻止默认事件
-        break;
-      case 13: //回车选择
-        if (cur != -1)
-          document.getElementById("input").value = as[cur].innerHTML; //回车时将选中的值设置到输入框中
-        break;
-    }
-  }
-
-  /**
-  stopImmediatePropagation() 和 stopPropagation()的区别在哪儿呢？
-  　　后者只会阻止冒泡或者是捕获。 但是前者除此之外还会阻止该元素的其他事件发生，但是后者就不会阻止其他事件的发生
-  **/
-</script>
