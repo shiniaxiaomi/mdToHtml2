@@ -355,6 +355,10 @@ pre > code {
   color: #6d6d6d;
   padding: 0px 2px;
 }
+.icon-none{
+  font-weight: bold;
+  color: #888888;
+}
 
 .top {
   text-decoration-line: none;

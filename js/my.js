@@ -140,7 +140,7 @@ function addSearchEvent() {
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
-    if (e.keyCode == 80) {
+    if (e.ctrlKey && e.keyCode == 80) {
       flag = true;
       showSearchDiv(); //显示搜索输入框
       e.preventDefault(); //阻止默认事件
@@ -149,6 +149,7 @@ function addSearchEvent() {
     }
   };
 }
+
 //获取搜索框节点
 function getSearchElement() {
   searchDiv = document.getElementById("searchDiv");
@@ -161,7 +162,8 @@ function initSearchData() {
   fileBuff.forEach(item => {
     var node = {
       content: item.nextElementSibling.innerText,
-      url: item.parentElement.getAttribute("href")
+      url: item.parentElement.getAttribute("href"),
+      icon: "iconfont icon-file"
     };
     dataArr.push(node);
   });
@@ -169,7 +171,8 @@ function initSearchData() {
   titleBuff.forEach(item => {
     var node = {
       content: item.innerText,
-      url: item.getAttribute("href")
+      url: item.getAttribute("href"),
+      icon: "iconfont icon-maodian"
     };
     dataArr.push(node);
   });
@@ -181,8 +184,14 @@ function showSearchDiv() {
   if (initSearchDataBuff == undefined) {
     dataArr.forEach(function(item) {
       var p = document.createElement("p");
+
+      var icon = document.createElement("i");
+      icon.setAttribute("class", item.icon);
+      p.appendChild(icon);
+
       var text = document.createTextNode(item.content);
       p.appendChild(text);
+
       p.setAttribute("url", item.url);
       dataList.appendChild(p);
     });
@@ -218,8 +227,14 @@ function searchKeywords() {
     dataArr.forEach(function(item) {
       if (item.content.indexOf(str) != -1) {
         var p = document.createElement("p");
+
+        var icon = document.createElement("i");
+        icon.setAttribute("class", item.icon);
+        p.appendChild(icon);
+
         var text = document.createTextNode(item.content);
         p.appendChild(text);
+
         p.setAttribute("url", item.url);
         dataList.appendChild(p);
       }
@@ -229,6 +244,10 @@ function searchKeywords() {
   //数据为空时,显示暂无数据
   if (dataList.innerHTML == "") {
     var p = document.createElement("p");
+    var icon = document.createElement("i");
+    icon.setAttribute("class", "iconfont icon-none");
+    p.appendChild(icon);
+
     var text = document.createTextNode("暂无数据");
     p.appendChild(text);
     dataList.appendChild(p);
@@ -278,9 +297,13 @@ function checkKeyCode(e) {
       break;
     case 13: //回车选择
       if (index != -1) {
+        //打开对应的链接
+        var url=pList[index].getAttribute("url");
+        if(url==undefined){
+          return;
+        }
         searchDiv.style.display = "none";
         searchInput.value = ""; //清空文本
-        //打开对应的链接
         window.location.href = pList[index].getAttribute("url");
       }
       break;
