@@ -133,6 +133,11 @@ function addSearchEvent() {
   //注册Ctrl+P快捷键
   var flag = true;
   document.onkeydown = function(e) {
+    //阻止浏览器的打印事件
+    if(e.ctrlKey && e.keyCode == 80){
+      e.preventDefault(); 
+    }
+
     if (flag && e.ctrlKey && e.keyCode == 80) {
       flag = false;
       e.preventDefault(); //阻止默认事件
@@ -140,9 +145,6 @@ function addSearchEvent() {
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
-    if(e.keyCode==80){
-      e.preventDefault(); //阻止默认事件
-    }
     if (e.ctrlKey && e.keyCode == 80) {
       flag = true;
       showSearchDiv(); //显示搜索输入框
