@@ -140,6 +140,9 @@ function addSearchEvent() {
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
+    if(e.keyCode==80){
+      e.preventDefault(); //阻止默认事件
+    }
     if (e.ctrlKey && e.keyCode == 80) {
       flag = true;
       showSearchDiv(); //显示搜索输入框
