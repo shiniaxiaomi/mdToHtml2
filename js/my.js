@@ -130,22 +130,22 @@ function addSearchEvent() {
     searchInput.focus();
   };
 
-  //注册Ctrl+P快捷键
+  //注册alt+P快捷键
   var flag = true;
   document.onkeydown = function(e) {
     //阻止浏览器的打印事件
-    if(e.ctrlKey && e.keyCode == 80){
+    if(e.altKey && e.keyCode == 80){
       e.preventDefault(); 
     }
 
-    if (flag && e.ctrlKey && e.keyCode == 80) {
+    if (flag && e.altKey && e.keyCode == 80) {
       flag = false;
       e.preventDefault(); //阻止默认事件
     }
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
-    if (e.ctrlKey && e.keyCode == 80) {
+    if (e.altKey && e.keyCode == 80) {
       flag = true;
       showSearchDiv(); //显示搜索输入框
       e.preventDefault(); //阻止默认事件
