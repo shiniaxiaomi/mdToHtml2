@@ -260,7 +260,8 @@ function searchKeywords() {
     dataList.innerHTML = initSearchDataBuff;
   } else {
     dataArr.forEach(function(item) {
-      if (item.content.indexOf(str) != -1) {
+      //全部转化为小写再进行比较,就可以忽略大小写进行查找
+      if (item.content.toLowerCase().indexOf(str.toLowerCase()) != -1) {
         var p = document.createElement("p");
 
         var icon = document.createElement("i");
