@@ -124,36 +124,36 @@ function syncClick() {
 
 //===============搜索框
 function addShortcutKey(){
-  //注册alt+o快捷键
+  //注册alt+i快捷键
   document.onkeypress=function(e){
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 79){
+    if(e.altKey && e.keyCode == 73){
       e.preventDefault(); 
     }
   }
   document.onkeydown = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 79){
+    if(e.altKey && e.keyCode == 73){
       e.preventDefault(); 
     }
 
     if(e.altKey){
       altFlag=true;
-      //300ms内按下o键则触发事件
+      //300ms内按下i键则触发事件
       window.clearTimeout(time);
       time=setTimeout(function(){
         altFlag=false
-      },300)
+      },400)
     }
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 79){
+    if(e.altKey && e.keyCode == 73){
       e.preventDefault(); 
     }
 
-    if (e.keyCode == 79) {
+    if (e.keyCode == 73) {
       if(altFlag){
         if(windowOnload){
           showSearchDiv(); //显示搜索输入框
