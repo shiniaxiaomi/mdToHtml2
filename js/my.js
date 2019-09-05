@@ -16,6 +16,7 @@ var initSearchDataBuff = undefined; //缓存搜索初始化的数据
 var altFlag = false;
 var time=undefined;
 var windowOnload=false;//标记是否已经完成加载
+var sign = 80;//定义默认的向上滚与向下滚的边界
 //注册快捷键
 addShortcutKey();
 
@@ -124,6 +125,7 @@ function syncClick() {
 
 //===============搜索框
 function addShortcutKey(){
+
   //注册alt+i快捷键
   document.onkeypress=function(e){
     //阻止浏览器的打印事件
@@ -181,6 +183,7 @@ function addSearchEvent() {
   };
   searchDiv.onclick = function() {
     searchInput.focus();
+    
   };
 
 }
@@ -301,9 +304,11 @@ function selectFirstSearchData() {
   }
   pList[0].classList = "on";
   index = 0;
+  dataList.scrollTop=0;
 }
 
 function checkKeyCode(e) {
+  var size=5;
   switch (e.keyCode) {
     case 38: //上
       if (index >= pList.length) {
@@ -317,6 +322,12 @@ function checkKeyCode(e) {
       }
       pList[index].classList = "on"; //将class设置为on
       event.preventDefault(); //阻止默认事件
+
+      //改变滚动条
+      if(index<pList.length-size){
+        dataList.scrollTop=(index-size)*dataList.scrollHeight/pList.length;
+        console.log(dataList.scrollTop)
+      }
       break;
     case 40: //下
       if (index <= -1) {
@@ -330,6 +341,12 @@ function checkKeyCode(e) {
       }
       pList[index].classList = "on"; //将class设置为on
       event.preventDefault(); //阻止默认事件
+
+      //改变滚动条
+      if(index>=size){
+        dataList.scrollTop=(index-size)*dataList.scrollHeight/pList.length;
+        console.log(dataList.scrollTop)
+      }
       break;
     case 13: //回车选择
       if (index != -1) {
