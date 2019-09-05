@@ -14,14 +14,14 @@ var initSearchDataBuff = undefined; //缓存搜索初始化的数据
 
 //注册快捷键时使用到的变量
 var altFlag = false;
-var time=undefined;
-var windowOnload=false;//标记是否已经完成加载
-var sign = 80;//定义默认的向上滚与向下滚的边界
+var time = undefined;
+var windowOnload = false; //标记是否已经完成加载
+var sign = 80; //定义默认的向上滚与向下滚的边界
 //注册快捷键
 addShortcutKey();
 
 window.onload = function() {
-  windowOnload=true;
+  windowOnload = true;
   //获取节点
   getSidebarElement();
   getSearchElement();
@@ -124,43 +124,42 @@ function syncClick() {
 }
 
 //===============搜索框
-function addShortcutKey(){
-
+function addShortcutKey() {
   //注册alt+i快捷键
-  document.onkeypress=function(e){
+  document.onkeypress = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 73){
-      e.preventDefault(); 
+    if (e.altKey && e.keyCode == 73) {
+      e.preventDefault();
     }
-  }
+  };
   document.onkeydown = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 73){
-      e.preventDefault(); 
+    if (e.altKey && e.keyCode == 73) {
+      e.preventDefault();
     }
 
-    if(e.altKey){
-      altFlag=true;
+    if (e.altKey) {
+      altFlag = true;
       //300ms内按下i键则触发事件
       window.clearTimeout(time);
-      time=setTimeout(function(){
-        altFlag=false
-      },400)
+      time = setTimeout(function() {
+        altFlag = false;
+      }, 400);
     }
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 73){
-      e.preventDefault(); 
+    if (e.altKey && e.keyCode == 73) {
+      e.preventDefault();
     }
 
     if (e.keyCode == 73) {
-      if(altFlag){
-        if(windowOnload){
+      if (altFlag) {
+        if (windowOnload) {
           showSearchDiv(); //显示搜索输入框
         }
-        altFlag=false;
+        altFlag = false;
       }
       e.preventDefault(); //阻止默认事件
     } else if (e.keyCode == 27) {
@@ -183,9 +182,7 @@ function addSearchEvent() {
   };
   searchDiv.onclick = function() {
     searchInput.focus();
-    
   };
-
 }
 
 //获取搜索框节点
@@ -304,11 +301,11 @@ function selectFirstSearchData() {
   }
   pList[0].classList = "on";
   index = 0;
-  dataList.scrollTop=0;
+  dataList.scrollTop = 0;
 }
 
 function checkKeyCode(e) {
-  var size=5;
+  var size = 5;
   switch (e.keyCode) {
     case 38: //上
       if (index >= pList.length) {
@@ -324,9 +321,10 @@ function checkKeyCode(e) {
       event.preventDefault(); //阻止默认事件
 
       //改变滚动条
-      if(index<pList.length-size){
-        dataList.scrollTop=(index-size)*dataList.scrollHeight/pList.length;
-        console.log(dataList.scrollTop)
+      if (index < pList.length - size) {
+        dataList.scrollTop =
+          ((index - size) * dataList.scrollHeight) / pList.length;
+        // console.log(dataList.scrollTop)
       }
       break;
     case 40: //下
@@ -343,16 +341,17 @@ function checkKeyCode(e) {
       event.preventDefault(); //阻止默认事件
 
       //改变滚动条
-      if(index>=size){
-        dataList.scrollTop=(index-size)*dataList.scrollHeight/pList.length;
-        console.log(dataList.scrollTop)
+      if (index >= size) {
+        dataList.scrollTop =
+          ((index - size) * dataList.scrollHeight) / pList.length;
+        // console.log(dataList.scrollTop)
       }
       break;
     case 13: //回车选择
       if (index != -1) {
         //打开对应的链接
-        var url=pList[index].getAttribute("url");
-        if(url==undefined){
+        var url = pList[index].getAttribute("url");
+        if (url == undefined) {
           return;
         }
         searchDiv.style.display = "none";
