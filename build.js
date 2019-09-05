@@ -6,7 +6,7 @@ const mdToHtml = require("./util/mdtohtml"); //获取md构建工具
 exports.startToBuild = function(gitUrl, srcDir, targetDir, staticPath) {
   try {
     //git clone笔记
-    // gitUtil.gitAction(gitUrl, srcDir);
+    gitUtil.gitAction(gitUrl, srcDir);
 
     // 删除目标路径下的所有文件
     fileUtil.rm(targetDir);
