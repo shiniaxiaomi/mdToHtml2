@@ -11,7 +11,16 @@ var index = -1; //标记现在选择的位置
 var pList = undefined; //存放p的数组
 var dataArr = []; //保存要搜索的数据的数组
 var initSearchDataBuff = undefined; //缓存搜索初始化的数据
+
+//注册快捷键时使用到的变量
+var altFlag = false;
+var time=undefined;
+var windowOnload=false;//标记是否已经完成加载
+//注册快捷键
+addShortcutKey();
+
 window.onload = function() {
+  windowOnload=true;
   //获取节点
   getSidebarElement();
   getSearchElement();
@@ -114,6 +123,50 @@ function syncClick() {
 }
 
 //===============搜索框
+function addShortcutKey(){
+  //注册alt+o快捷键
+  document.onkeypress=function(e){
+    //阻止浏览器的打印事件
+    if(e.altKey && e.keyCode == 79){
+      e.preventDefault(); 
+    }
+  }
+  document.onkeydown = function(e) {
+    //阻止浏览器的打印事件
+    if(e.altKey && e.keyCode == 79){
+      e.preventDefault(); 
+    }
+
+    if(e.altKey){
+      altFlag=true;
+      //300ms内按下o键则触发事件
+      window.clearTimeout(time);
+      time=setTimeout(function(){
+        altFlag=false
+      },300)
+    }
+  };
+  //在键盘弹起的时候触发事件
+  document.onkeyup = function(e) {
+    //阻止浏览器的打印事件
+    if(e.altKey && e.keyCode == 79){
+      e.preventDefault(); 
+    }
+
+    if (e.keyCode == 79) {
+      if(altFlag){
+        if(windowOnload){
+          showSearchDiv(); //显示搜索输入框
+        }
+        altFlag=false;
+      }
+      e.preventDefault(); //阻止默认事件
+    } else if (e.keyCode == 27) {
+      hiddenSearchDiv();
+    }
+  };
+}
+
 //给搜索框添加事件
 function addSearchEvent() {
   //给输入框注册事件
@@ -130,47 +183,6 @@ function addSearchEvent() {
     searchInput.focus();
   };
 
-  //注册alt+P快捷键
-  var ctrlFlag = false;
-  var time=undefined;
-  document.onkeypress=function(e){
-    //阻止浏览器的打印事件
-    if(e.ctrlKey && e.keyCode == 80){
-      e.preventDefault(); 
-    }
-  }
-  document.onkeydown = function(e) {
-    //阻止浏览器的打印事件
-    if(e.ctrlKey && e.keyCode == 80){
-      e.preventDefault(); 
-    }
-
-    if(e.ctrlKey){
-      ctrlFlag=true;
-      //300ms内按下p键则触发事件
-      window.clearTimeout(time);
-      time=setTimeout(function(){
-        ctrlFlag=false
-      },300)
-    }
-  };
-  //在键盘弹起的时候触发事件
-  document.onkeyup = function(e) {
-    //阻止浏览器的打印事件
-    if(e.ctrlKey && e.keyCode == 80){
-      e.preventDefault(); 
-    }
-
-    if (e.keyCode == 80) {
-      if(ctrlFlag){
-        showSearchDiv(); //显示搜索输入框
-        ctrlFlag=false;
-      }
-      e.preventDefault(); //阻止默认事件
-    } else if (e.keyCode == 27) {
-      hiddenSearchDiv();
-    }
-  };
 }
 
 //获取搜索框节点

@@ -379,7 +379,8 @@ pre > code {
   width: 320px;
   margin: 0 auto;
   position: fixed;
-  left: 36%;
+  left: 0;
+  right: 0;
   top: 25%;
   z-index: 1000;
 }
