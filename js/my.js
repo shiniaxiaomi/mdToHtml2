@@ -131,23 +131,41 @@ function addSearchEvent() {
   };
 
   //注册alt+P快捷键
-  var flag = true;
+  var ctrlFlag = false;
+  var time=undefined;
+  document.onkeypress=function(e){
+    //阻止浏览器的打印事件
+    if(e.ctrlKey && e.keyCode == 80){
+      e.preventDefault(); 
+    }
+  }
   document.onkeydown = function(e) {
     //阻止浏览器的打印事件
-    if(e.altKey && e.keyCode == 80){
+    if(e.ctrlKey && e.keyCode == 80){
       e.preventDefault(); 
     }
 
-    if (flag && e.altKey && e.keyCode == 80) {
-      flag = false;
-      e.preventDefault(); //阻止默认事件
+    if(e.ctrlKey){
+      ctrlFlag=true;
+      //300ms内按下p键则触发事件
+      window.clearTimeout(time);
+      time=setTimeout(function(){
+        ctrlFlag=false
+      },300)
     }
   };
   //在键盘弹起的时候触发事件
   document.onkeyup = function(e) {
-    if (e.altKey && e.keyCode == 80) {
-      flag = true;
-      showSearchDiv(); //显示搜索输入框
+    //阻止浏览器的打印事件
+    if(e.ctrlKey && e.keyCode == 80){
+      e.preventDefault(); 
+    }
+
+    if (e.keyCode == 80) {
+      if(ctrlFlag){
+        showSearchDiv(); //显示搜索输入框
+        ctrlFlag=false;
+      }
       e.preventDefault(); //阻止默认事件
     } else if (e.keyCode == 27) {
       hiddenSearchDiv();
