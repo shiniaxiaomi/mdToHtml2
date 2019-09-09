@@ -283,6 +283,10 @@ function showSearchDiv() {
       p.appendChild(text);
 
       p.setAttribute("url", item.url);
+      p.onclick=function(){
+        window.location=item.url;
+        showSearchDiv();//隐藏searchDiv
+      }
       dataList.appendChild(p);
     });
     initSearchDataBuff = dataList.innerHTML;
@@ -327,6 +331,10 @@ function searchKeywords() {
         p.appendChild(text);
 
         p.setAttribute("url", item.url);
+        p.onclick=function(){
+          window.location=item.url;
+          showSearchDiv();//隐藏searchDiv
+        }
         dataList.appendChild(p);
       }
     });
