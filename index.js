@@ -22,7 +22,7 @@ var staticPath = "http://47.105.165.211"; //静态资源路径
 // var staticPath = "http://localhost";
 
 //构建笔记html
-var buildOutput = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
+var buildOutput = build.startToBuild(gitUrl, srcDir, targetDir, staticPath,true);//删除原生成的笔记html
 if (buildOutput.flag == false) {
   //如果报错,则打印日志
   console.log(buildOutput.data);
@@ -46,7 +46,7 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
     //执行同步操作
     //构建笔记html
     console.log("开始构建笔记--------------");
-    var output = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
+    var output = build.startToBuild(gitUrl, srcDir, targetDir, staticPath,false);//不删除原生成的笔记html
 
     if (output.flag) {
       res.send({ flag: 1, data: "" }); //成功
