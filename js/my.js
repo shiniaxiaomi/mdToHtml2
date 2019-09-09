@@ -21,10 +21,19 @@ var sign = 80; //定义默认的向上滚与向下滚的边界
 addShortcutKey();
 
 window.onload = function() {
+
   windowOnload = true;
   //获取节点
   getSidebarElement();
   getSearchElement();
+
+  //判断是否是PC端,并进行隐藏对应的按钮
+  if(IsPC()){
+    document.getElementById("hiddenDirButton").style.display="none";
+    document.getElementById("searchNoteButton").style.display="none";
+  }else{
+    hiddenDir();//如果是手机端,默认隐藏侧边栏
+  }
 
   //添加事件
   addSidebarEvent();
@@ -37,7 +46,42 @@ window.onload = function() {
   folderList.forEach(elm => {
     folderClick.call(elm);
   });
+
+ 
+  
 };
+
+//判断是否是PC端
+function IsPC() {
+  var userAgentInfo = navigator.userAgent;
+  var Agents = ["Android", "iPhone",
+     "SymbianOS", "Windows Phone",
+     "iPad", "iPod"];
+  var flag = true;
+  for (var v = 0; v < Agents.length; v++) {
+     if (userAgentInfo.indexOf(Agents[v]) > 0) {
+        flag = false;
+        break;
+     }
+  }
+  return flag;
+}
+
+//===============添加两个手机端的按钮
+//隐藏目录
+function hiddenDir(){
+  if(document.getElementById("sidebar").style.display!="none"){
+    document.getElementById("sidebar").style.display="none";
+    document.getElementById("top-container").style.marginLeft="0px";
+  }else{
+    document.getElementById("sidebar").style.display="block";
+    document.getElementById("top-container").style.marginLeft="250px";
+  }
+}
+//搜索笔记
+function searchNote(){
+  showSearchDiv();
+}
 
 //===============文件夹和大纲
 //给侧边栏添加事件
