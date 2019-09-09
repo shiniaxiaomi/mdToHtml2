@@ -73,12 +73,14 @@ function hiddenDir(){
   if(document.getElementById("sidebar").style.display!="none"){
     document.getElementById("sidebar").style.display="none";
     document.getElementById("top-container").style.marginLeft="0px";
+    document.getElementById("write").style.padding="0px 0px 0px 25px";//手机端将padding变小
   }else{
     document.getElementById("sidebar").style.display="block";
     document.getElementById("top-container").style.marginLeft="250px";
+    document.getElementById("write").style.padding="60px";
   }
-  //手机端将padding变小
-  document.getElementById("write").style.padding="25px";
+  
+  
 }
 //搜索笔记
 function searchNote(){
