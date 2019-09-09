@@ -71,13 +71,18 @@ function IsPC() {
 //隐藏目录
 function hiddenDir(){
   if(document.getElementById("sidebar").style.display!="none"){
+    var top=document.getElementById("top");
+
     document.getElementById("sidebar").style.display="none";
     document.getElementById("top-container").style.marginLeft="0px";
-    document.getElementById("write").style.padding="0px 0px 0px 25px";//手机端将padding变小
+    //设置返回顶部按钮
+    top.style.right="30px";
+    top.style.bottom="30px";
+    top.style.opacity="0.4";
+
   }else{
     document.getElementById("sidebar").style.display="block";
     document.getElementById("top-container").style.marginLeft="250px";
-    document.getElementById("write").style.padding="60px";
   }
   
   
