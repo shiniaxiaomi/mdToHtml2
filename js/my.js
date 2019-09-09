@@ -77,6 +77,8 @@ function hiddenDir(){
     document.getElementById("sidebar").style.display="block";
     document.getElementById("top-container").style.marginLeft="250px";
   }
+  //手机端将padding变小
+  document.getElementById("write").style.padding="25px";
 }
 //搜索笔记
 function searchNote(){
