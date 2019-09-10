@@ -10,7 +10,7 @@ const renderer = new marked.Renderer(); //创建markdown渲染对象
 
 //渲染a标签时的回调
 renderer.link = function(href, title, text) {
-  return `<a href="${href}" target="_blank">${text}</a>`;
+  return `<a target="_blank" href="${href}">${text}</a>`;
 };
 
 //渲染h1-h6标签时的回调
@@ -20,17 +20,17 @@ renderer.heading = function(text, level) {
     .substr(3, 15);
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
-    var url = text.match("href=.* ")[0];
+    var url = text.match("href=.*\">")[0];
     url = url.substring(6, url.length - 2);
     var str = text.match(">.*<")[0];
-    text = str.substring(1, str.length - 1);
+    text = str.substring(1, str.length-1);
     //暂存标签,用于生成大纲
     titleList.push({
       level: level,
       text: text,
       id: titleId
     });
-    return `<h${level} id="${titleId}"><a href="${url}" target="_blank">${text}</a></h${level}>`;
+    return `<h${level} id="${titleId}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
   }
 
   //暂存标签,用于生成大纲
