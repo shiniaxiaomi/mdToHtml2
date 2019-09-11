@@ -8,18 +8,18 @@ const path = require("path");
 const build = require("./build"); //获取构建对象
 
 //linux
-// var gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
-// var srcDir = "/note"; //原笔记存放路径
-// var targetDir = "/html"; //html生成路径
-// var staticPath = "http://47.105.165.211"; //静态资源路径
+var gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
+var srcDir = "/note"; //原笔记存放路径
+var targetDir = "/html"; //html生成路径
+var staticPath = "http://47.105.165.211"; //静态资源路径
 
 //本地
-var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-// var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
-// var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
-var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
-var staticPath = "http://localhost";
+// var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+// // var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
+// var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+// // var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+// var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+// var staticPath = "http://localhost";
 
 //构建笔记html
 var buildOutput = build.startToBuild(gitUrl, srcDir, targetDir, staticPath,true);//删除原生成的笔记html
