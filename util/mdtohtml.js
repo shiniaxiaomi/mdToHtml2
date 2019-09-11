@@ -161,5 +161,40 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
   );
 
   //生成index.html
-  fileUtil.buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
+  buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
 };
+
+//构建并生成对应的index.html
+function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
+  var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
+
+  var noteStr="";
+  var noteHtml="";
+  if(fs.existsSync(path.join(srcDir, "/README.md"))){
+    //读取readme.md文件
+    noteStr = fs.readFileSync(path.join(srcDir, "/README.md")).toString();
+    //解析文件并生成html
+    noteHtml = marked(noteStr, { renderer: renderer });
+  }
+
+  //进行模板的参数替换
+  var indexHtml = template
+    .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+    .replace("#{sidebar-file}", dirHtml)
+    .replace("#{body}", noteHtml);
+
+  try {
+    fs.writeFileSync(
+      path.join(targetDir, "index.html"),
+      // indexHtml
+      minify(indexHtml, {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      })
+    ); //开启文本压缩
+  } catch (err) {
+    console.log("html文件写入失败:" + err);
+  }
+}

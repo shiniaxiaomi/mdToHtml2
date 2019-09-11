@@ -74,15 +74,14 @@
     </div>
 
     <div id="top-container" class="top-container">
-      <div id="write">
-          <h1>陆英杰的博客</h1>
-
+      <div style="text-align: center">
           <button onclick="syncClick()">同步</button>
-
           <button id="hiddenDirButton" onclick="hiddenDir()">隐藏目录</button>
           <button id="searchNoteButton" onclick="searchNote()">搜索笔记</button>
       </div>
-      
+      <div id="write" class="markdown-body">
+        #{body}
+      </div>
     </div>
   </body>
 </html>
