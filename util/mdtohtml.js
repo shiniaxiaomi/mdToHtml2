@@ -102,7 +102,10 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
-      noteHtml.replace(new RegExp('class="javascript"', "gm"), 'class="js"'); //将class为JavaScript的替换成js
+      noteHtml = noteHtml.replace(
+        new RegExp('class="javascript"', "gm"),
+        'class="js"'
+      ); //将class为JavaScript的替换成js
       //生成toc目录
       var tocHtml = fileUtil.getTocHtml(titleList);
 
