@@ -10,7 +10,8 @@ const build = require("./build"); //获取构建对象
 var gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
 var srcDir = "/note"; //原笔记存放路径
 var targetDir = "/html"; //html生成路径
-var staticPath = "http://47.105.165.211"; //静态资源路径
+// var staticPath = "http://47.105.165.211"; //静态资源路径
+var staticPath = ""; //静态资源路径
 
 //本地
 // var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
