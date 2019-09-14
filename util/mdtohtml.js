@@ -10,7 +10,7 @@ const renderer = new marked.Renderer(); //创建markdown渲染对象
 
 //渲染a标签时的回调
 renderer.link = function(href, title, text) {
-  return `<a href="${href}" target="_blank">${text}</a>`;
+  return `<a target="_blank" href="${href}">${text}</a>`;
 };
 
 //渲染h1-h6标签时的回调
@@ -20,17 +20,17 @@ renderer.heading = function(text, level) {
     .substr(3, 15);
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
-    var url = text.match("href=.* ")[0];
+    var url = text.match("href=.*\">")[0];
     url = url.substring(6, url.length - 2);
     var str = text.match(">.*<")[0];
-    text = str.substring(1, str.length - 1);
+    text = str.substring(1, str.length-1);
     //暂存标签,用于生成大纲
     titleList.push({
       level: level,
       text: text,
       id: titleId
     });
-    return `<h${level} id="${titleId}"><a href="${url}" target="_blank">${text}</a></h${level}>`;
+    return `<h${level} id="${titleId}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
   }
 
   //暂存标签,用于生成大纲
@@ -161,5 +161,40 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
   );
 
   //生成index.html
-  fileUtil.buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
+  buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
 };
+
+//构建并生成对应的index.html
+function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
+  var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
+
+  var noteStr="";
+  var noteHtml="";
+  if(fs.existsSync(path.join(srcDir, "/README.md"))){
+    //读取readme.md文件
+    noteStr = fs.readFileSync(path.join(srcDir, "/README.md")).toString();
+    //解析文件并生成html
+    noteHtml = marked(noteStr, { renderer: renderer });
+  }
+
+  //进行模板的参数替换
+  var indexHtml = template
+    .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+    .replace("#{sidebar-file}", dirHtml)
+    .replace("#{body}", noteHtml);
+
+  try {
+    fs.writeFileSync(
+      path.join(targetDir, "index.html"),
+      // indexHtml
+      minify(indexHtml, {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      })
+    ); //开启文本压缩
+  } catch (err) {
+    console.log("html文件写入失败:" + err);
+  }
+}

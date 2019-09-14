@@ -17,7 +17,7 @@
   </head>
   <body>
     <!-- 回到顶部的按钮 -->
-    <a class="top" href="#header">
+    <a id="top" class="top" href="#header">
       <i class="iconfont icon-up"></i>
     </a>
     <div id="header"></div>
@@ -57,7 +57,12 @@
       <div id="dataList" class="dataList"></div>
     </div>
 
-    <div class="top-container">
+    <div id="top-container" class="top-container">
+      <div style="text-align: center">
+          <button id="hiddenDirButton" onclick="hiddenDir()">隐藏目录</button>
+          <button id="searchNoteButton" onclick="searchNote()">搜索笔记</button>
+      </div>
+
       <div id="toc">#{top-toc}</div>
       <div id="write" class="markdown-body">
         #{body}

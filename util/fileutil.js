@@ -3,30 +3,31 @@ const shell = require("shelljs");
 const path = require("path");
 const mapDirUtil = require("./mapdirutil");
 const minify = require("html-minifier").minify; //文本压缩
+// const marked = require("marked"); //markdown解析
 
 //构建并生成对应的index.html
-function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
-  var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
-  //进行模板的参数替换
-  var indexHtml = template
-    .replace(new RegExp("#{staticPath}", "gm"), staticPath)
-    .replace("#{sidebar-file}", dirHtml);
+// function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath,renderer) {
+//   var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
+//   //进行模板的参数替换
+//   var indexHtml = template
+//     .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+//     .replace("#{sidebar-file}", dirHtml);
 
-  try {
-    fs.writeFileSync(
-      path.join(targetDir, "index.html"),
-      // indexHtml
-      minify(indexHtml, {
-        removeComments: true,
-        collapseWhitespace: true,
-        minifyJS: true,
-        minifyCSS: true
-      })
-    ); //开启文本压缩
-  } catch (err) {
-    console.log("html文件写入失败:" + err);
-  }
-}
+//   try {
+//     fs.writeFileSync(
+//       path.join(targetDir, "index.html"),
+//       // indexHtml
+//       minify(indexHtml, {
+//         removeComments: true,
+//         collapseWhitespace: true,
+//         minifyJS: true,
+//         minifyCSS: true
+//       })
+//     ); //开启文本压缩
+//   } catch (err) {
+//     console.log("html文件写入失败:" + err);
+//   }
+// }
 
 //获取目录的html
 function getDirHtml(srcDir, targetDir, staticPath) {
@@ -230,9 +231,9 @@ exports.getDirHtml = function(srcDir, targetDir, staticPath) {
 };
 
 //构建并生成index.html
-exports.buildIndexHtml = function(srcDir, targetDir, dirHtml, staticPath) {
-  buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
-};
+// exports.buildIndexHtml = function(srcDir, targetDir, dirHtml, staticPath,renderer) {
+//   buildIndexHtml(srcDir, targetDir, dirHtml, staticPath,renderer);
+// };
 
 //递归创建目录
 exports.mkdir = function(dir) {
