@@ -102,10 +102,6 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
-      // noteHtml = noteHtml.replace(
-      //   new RegExp('class="javascript"', "gm"),
-      //   'class="js"'
-      // ); //将class为JavaScript的替换成js
       //生成toc目录
       var tocHtml = fileUtil.getTocHtml(titleList);
 
@@ -141,7 +137,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
           // html
           minify(html, {
             removeComments: true,
-            collapseWhitespace: false,
+            collapseWhitespace: true,
             minifyJS: true,
             minifyCSS: true
           }) //开启文本压缩
