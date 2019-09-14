@@ -20,10 +20,10 @@ renderer.heading = function(text, level) {
     .substr(3, 15);
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
-    var url = text.match("href=.*\">")[0];
+    var url = text.match('href=.*">')[0];
     url = url.substring(6, url.length - 2);
     var str = text.match(">.*<")[0];
-    text = str.substring(1, str.length-1);
+    text = str.substring(1, str.length - 1);
     //暂存标签,用于生成大纲
     titleList.push({
       level: level,
@@ -102,6 +102,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
+      noteHtml.replace(new RegExp('class="javascript"', "gm"), 'class="js"'); //将class为JavaScript的替换成js
       //生成toc目录
       var tocHtml = fileUtil.getTocHtml(titleList);
 
@@ -168,9 +169,9 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
   var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
 
-  var noteStr="";
-  var noteHtml="";
-  if(fs.existsSync(path.join(srcDir, "/README.md"))){
+  var noteStr = "";
+  var noteHtml = "";
+  if (fs.existsSync(path.join(srcDir, "/README.md"))) {
     //读取readme.md文件
     noteStr = fs.readFileSync(path.join(srcDir, "/README.md")).toString();
     //解析文件并生成html
