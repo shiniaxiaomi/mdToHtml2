@@ -8,11 +8,14 @@ exports.startToBuild = function(
   srcDir,
   targetDir,
   staticPath,
-  isRemoveDirFlag
+  isRemoveDirFlag,
+  isNeedClone
 ) {
   try {
     //git clone笔记
-    // gitUtil.gitAction(gitUrl, srcDir);
+    if(isNeedClone){
+      gitUtil.gitAction(gitUrl, srcDir);
+    }
 
     // 删除目标路径下的所有文件
     if (isRemoveDirFlag == true) {

@@ -13,6 +13,7 @@ var srcDir = "/note"; //原笔记存放路径
 var targetDir = "/html"; //html生成路径
 // var staticPath = "http://47.105.165.211"; //静态资源路径
 var staticPath = ""; //静态资源路径
+var isNeedClone=true;//需要clone
 
 //本地
 // var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
@@ -21,6 +22,7 @@ var staticPath = ""; //静态资源路径
 // // var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
 // var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
 // var staticPath = "http://localhost";
+// var isNeedClone=false;//本地调试不需要clone
 
 //构建笔记html
 var buildOutput = build.startToBuild(
@@ -28,7 +30,8 @@ var buildOutput = build.startToBuild(
   srcDir,
   targetDir,
   staticPath,
-  true
+  true,
+  isNeedClone
 ); //删除原生成的笔记html
 if (buildOutput.flag == false) {
   //如果报错,则打印日志

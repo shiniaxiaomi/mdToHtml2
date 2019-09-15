@@ -253,8 +253,9 @@ function getSearchElement() {
 //初始化搜索数据
 function initSearchData() {
   var fileBuff = document.querySelectorAll("#top-file .icon-file");
+  
   for(var i=0;i<fileBuff.length;i++){
-    if(fileBuff[i].nextElementSibling==null) return;
+    if(fileBuff[i].nextElementSibling==null) continue;
     var node = {
       content: fileBuff[i].nextElementSibling.innerText,
       url: fileBuff[i].parentElement.getAttribute("href"),
@@ -273,11 +274,10 @@ function initSearchData() {
   // });
   var titleBuff = document.querySelectorAll("#top-content a");
   for(var i=0;i<titleBuff.length;i++){
-    if(titleBuff[i].nextElementSibling==null) return;
     var node = {
-      content: titleBuff[i].nextElementSibling.innerText,
-      url: titleBuff[i].parentElement.getAttribute("href"),
-      icon: "iconfont icon-file"
+      content: titleBuff[i].innerText,
+      url: titleBuff[i].getAttribute("href"),
+      icon: "iconfont icon-maodian"
     };
     dataArr.push(node);
   }
