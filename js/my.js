@@ -1,5 +1,3 @@
-alert("test")
-
 let fileTitle;
 let fileContent;
 let tocTitle;
@@ -29,12 +27,12 @@ window.onload = function() {
   getSearchElement();
 
   //判断是否是PC端,并进行隐藏对应的按钮
-  // if (IsPC()) {
-  //   document.getElementById("hiddenDirButton").style.display = "none";
-  //   document.getElementById("searchNoteButton").style.display = "none";
-  // } else {
-  //   hiddenDir(); //如果是手机端,默认隐藏侧边栏
-  // }
+  if (IsPC()) {
+    document.getElementById("hiddenDirButton").style.display = "none";
+    document.getElementById("searchNoteButton").style.display = "none";
+  } else {
+    hiddenDir(); //如果是手机端,默认隐藏侧边栏
+  }
 
   //添加事件
   addSidebarEvent();
