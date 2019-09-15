@@ -15,6 +15,7 @@ body {
   color: rgb(0, 0, 0);
   line-height: 1.6;
   margin: 0;
+  word-break: break-all;
 }
 
 #write {
