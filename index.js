@@ -6,23 +6,32 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express(); //获取app对象
 const path = require("path");
 const build = require("./build"); //获取构建对象
+const os=require("os");
 
-//linux
-var gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
-var srcDir = "/note"; //原笔记存放路径
-var targetDir = "/html"; //html生成路径
-// var staticPath = "http://47.105.165.211"; //静态资源路径
-var staticPath = ""; //静态资源路径
-var isNeedClone=true;//需要clone
 
-//本地
-// var gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-// // var srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-// var srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
-// // var targetDir = "C:\\Users\\Administrator\\Desktop\\html";
-// var targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
-// var staticPath = "http://localhost";
-// var isNeedClone=false;//本地调试不需要clone
+var gitUrl = undefined; //git网址
+var srcDir = undefined; //原笔记存放路径
+var targetDir = undefined; //html生成路径
+var staticPath = undefined; //静态资源路径
+var isNeedClone=undefined;//需要clone
+
+//本地测试
+if(os.type()!="Windows_NT"){
+  gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
+  srcDir = "/note"; //原笔记存放路径
+  targetDir = "/html"; //html生成路径
+  // staticPath = "http://47.105.165.211"; //静态资源路径
+  staticPath = ""; //静态资源路径
+  isNeedClone=true;//需要clone
+}else{//线上
+  gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
+  // srcDir = "C:\\Users\\Administrator\\Desktop\\note";
+  srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+  // targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+  targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+  staticPath = "http://localhost";
+  isNeedClone=false;//本地调试不需要clone
+}
 
 //构建笔记html
 var buildOutput = build.startToBuild(
