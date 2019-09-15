@@ -12,7 +12,7 @@ exports.startToBuild = function(
 ) {
   try {
     //git clone笔记
-    gitUtil.gitAction(gitUrl, srcDir);
+    // gitUtil.gitAction(gitUrl, srcDir);
 
     // 删除目标路径下的所有文件
     if (isRemoveDirFlag == true) {
