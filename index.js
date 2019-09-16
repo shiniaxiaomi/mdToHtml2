@@ -64,13 +64,14 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
   if (req.body.password == "123456") {
     //执行同步操作
     //构建笔记html
-    console.log("开始构建笔记--------------");
+    console.log("同步按钮: 开始构建笔记--------------");
     var output = build.startToBuild(
       gitUrl,
       srcDir,
       targetDir,
       staticPath,
-      false
+      false,
+      true //允许clone
     ); //不删除原生成的笔记html
 
     if (output.flag) {
