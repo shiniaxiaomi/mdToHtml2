@@ -134,13 +134,13 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
       try {
         fs.writeFileSync(
           targetFile,
-          // html
-          minify(html, {
-            removeComments: true,
-            collapseWhitespace: true,
-            minifyJS: true,
-            minifyCSS: true
-          }) //开启文本压缩
+          html
+          // minify(html, {
+          //   removeComments: true,
+          //   collapseWhitespace: true,
+          //   minifyJS: true,
+          //   minifyCSS: true
+          // }) //开启文本压缩
         );
       } catch (err) {
         console.log("html文件写入失败:" + err);
@@ -186,13 +186,13 @@ function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
   try {
     fs.writeFileSync(
       path.join(targetDir, "index.html"),
-      // indexHtml
-      minify(indexHtml, {
-        removeComments: true,
-        collapseWhitespace: true,
-        minifyJS: true,
-        minifyCSS: true
-      })
+      indexHtml
+      // minify(indexHtml, {
+      //   removeComments: true,
+      //   collapseWhitespace: true,
+      //   minifyJS: true,
+      //   minifyCSS: true
+      // })
     ); //开启文本压缩
   } catch (err) {
     console.log("html文件写入失败:" + err);

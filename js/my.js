@@ -42,9 +42,9 @@ window.onload = function() {
   initSearchData();
 
   //initialize(关闭所有文件夹)
-  folderList.forEach(elm => {
-    folderClick.call(elm);
-  });
+  for(var i=0;i<folderList.length;i++){
+    folderClick.call(folderList[i])
+  }
 };
 
 //判断是否是PC端
@@ -76,7 +76,7 @@ function hiddenDir() {
 
     document.getElementById("sidebar").style.display = "none";
     document.getElementById("top-container").style.marginLeft = "0px";
-    document.getElementById("write").style.padding = "0px 0px 0px 25px"; //手机端将padding变小
+    document.getElementById("write").style.padding = "0px 25px 0px 25px"; //手机端将padding变小
     //设置返回顶部按钮
     top.style.right = "30px";
     top.style.bottom = "30px";
@@ -96,7 +96,10 @@ function searchNote() {
 //给侧边栏添加事件
 function addSidebarEvent() {
   folderList = document.querySelectorAll(".folder");
-  folderList.forEach(ele => ele.addEventListener("click", folderClick));
+  for(var i=0;i<folderList.length;i++){
+    folderList[i].addEventListener("click", folderClick);
+  }
+  // folderList.forEach(ele => ele.addEventListener("click", folderClick));
 }
 //获取侧边栏的节点
 function getSidebarElement() {
@@ -247,46 +250,50 @@ function getSearchElement() {
 //初始化搜索数据
 function initSearchData() {
   var fileBuff = document.querySelectorAll("#top-file .icon-file");
-  fileBuff.forEach(item => {
+  
+  for(var i=0;i<fileBuff.length;i++){
+    if(fileBuff[i].nextElementSibling==null) continue;
     var node = {
-      content: item.nextElementSibling.innerText,
-      url: item.parentElement.getAttribute("href"),
+      content: fileBuff[i].nextElementSibling.innerText,
+      url: fileBuff[i].parentElement.getAttribute("href"),
       icon: "iconfont icon-file"
     };
     dataArr.push(node);
-  });
+  }
+
   var titleBuff = document.querySelectorAll("#top-content a");
-  titleBuff.forEach(item => {
+  for(var i=0;i<titleBuff.length;i++){
     var node = {
-      content: item.innerText,
-      url: item.getAttribute("href"),
+      content: titleBuff[i].innerText,
+      url: titleBuff[i].getAttribute("href"),
       icon: "iconfont icon-maodian"
     };
     dataArr.push(node);
-  });
+  }
 }
 
 //搜索弹窗显示和影藏
 function showSearchDiv() {
   //首次显示,进行初始化
   if (initSearchDataBuff == undefined) {
-    dataArr.forEach(function(item) {
+    for(let i=0;i<dataArr.length;i++){
       var p = document.createElement("p");
 
       var icon = document.createElement("i");
-      icon.setAttribute("class", item.icon);
+      icon.setAttribute("class", dataArr[i].icon);
       p.appendChild(icon);
 
-      var text = document.createTextNode(item.content);
+      var text = document.createTextNode(dataArr[i].content);
       p.appendChild(text);
 
-      p.setAttribute("url", item.url);
+      p.setAttribute("url", dataArr[i].url);
       p.onclick = function() {
-        window.location = item.url;
+        window.location = dataArr[i].url;
         showSearchDiv(); //隐藏searchDiv
       };
       dataList.appendChild(p);
-    });
+    }
+
     initSearchDataBuff = dataList.innerHTML;
   } else {
     dataList.innerHTML = initSearchDataBuff;
@@ -316,26 +323,26 @@ function searchKeywords() {
   if (str == "") {
     dataList.innerHTML = initSearchDataBuff;
   } else {
-    dataArr.forEach(function(item) {
-      //全部转化为小写再进行比较,就可以忽略大小写进行查找
-      if (item.content.toLowerCase().indexOf(str.toLowerCase()) != -1) {
+    for(let i=0;i<dataArr.length;i++){
+       //全部转化为小写再进行比较,就可以忽略大小写进行查找
+       if (dataArr[i].content.toLowerCase().indexOf(str.toLowerCase()) != -1) {
         var p = document.createElement("p");
 
         var icon = document.createElement("i");
-        icon.setAttribute("class", item.icon);
+        icon.setAttribute("class", dataArr[i].icon);
         p.appendChild(icon);
 
-        var text = document.createTextNode(item.content);
+        var text = document.createTextNode(dataArr[i].content);
         p.appendChild(text);
 
-        p.setAttribute("url", item.url);
+        p.setAttribute("url", dataArr[i].url);
         p.onclick = function() {
-          window.location = item.url;
+          window.location = dataArr[i].url;
           showSearchDiv(); //隐藏searchDiv
         };
         dataList.appendChild(p);
       }
-    });
+    }
   }
 
   //数据为空时,显示暂无数据
