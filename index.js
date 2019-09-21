@@ -74,12 +74,32 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
 //添加一个每天凌晨定时拉去更新笔记的功能
 //每天凌晨4点钟执行
 schedule.scheduleJob("0 0 4 * * *", function() {
-  console.log("定时任务开始构建笔记--------------");
-  var output = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
+  console.log(getDate() + " 定时任务开始构建笔记--------------");
+  var output = build.startToBuild(gitUrl, srcDir, targetDir, staticPath, true); //删除原来的笔记生成的html的内容,重新构建
 
   if (output.flag) {
-    console.log("定时任务构建笔记成功!");
+    console.log(getDate() + " 定时任务构建笔记成功!");
   } else {
-    console.log("定时任务构建笔记失败:" + output.data);
+    console.log(getDate() + " 定时任务构建笔记失败:" + output.data);
   }
 });
+
+function getDate() {
+  var date = new Date();
+  var str = "";
+  str +=
+    date.getFullYear() +
+    "/" +
+    date.getMonth() +
+    "/" +
+    date.getDate() +
+    " " +
+    date.getHours() +
+    ":" +
+    date.getMinutes() +
+    ":" +
+    date.getSeconds();
+
+  console.log(str);
+  return str;
+}
