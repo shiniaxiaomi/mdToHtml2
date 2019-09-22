@@ -6,14 +6,13 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express(); //获取app对象
 const path = require("path");
 const build = require("./build"); //获取构建对象
-const os=require("os");
-
+const os = require("os");
 
 var gitUrl = undefined; //git网址
 var srcDir = undefined; //原笔记存放路径
 var targetDir = undefined; //html生成路径
 var staticPath = undefined; //静态资源路径
-var isNeedClone=undefined;//需要clone
+var isNeedClone = undefined; //需要clone
 
 //本地测试
 if(os.type()!="Windows_NT"){//线上
@@ -30,7 +29,7 @@ if(os.type()!="Windows_NT"){//线上
   // targetDir = "C:\\Users\\Administrator\\Desktop\\html";
   targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
   staticPath = "http://localhost";
-  isNeedClone=false;//本地调试不需要clone
+  isNeedClone = false; //本地调试不需要clone
 }
 
 //构建笔记html
@@ -87,12 +86,39 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
 //添加一个每天凌晨定时拉去更新笔记的功能
 //每天凌晨4点钟执行
 schedule.scheduleJob("0 0 4 * * *", function() {
-  console.log("定时任务开始构建笔记--------------");
-  var output = build.startToBuild(gitUrl, srcDir, targetDir, staticPath);
+  console.log(getDate() + " 定时任务开始构建笔记--------------");
+  var output = build.startToBuild(
+    gitUrl,
+    srcDir,
+    targetDir,
+    staticPath,
+    true, //删除原来的笔记生成的html的内容,重新构建
+    true //允许克隆
+  );
 
   if (output.flag) {
-    console.log("定时任务构建笔记成功!");
+    console.log(getDate() + " 定时任务构建笔记成功!");
   } else {
-    console.log("定时任务构建笔记失败:" + output.data);
+    console.log(getDate() + " 定时任务构建笔记失败:" + output.data);
   }
 });
+
+function getDate() {
+  var date = new Date();
+  var str = "";
+  str +=
+    date.getFullYear() +
+    "/" +
+    date.getMonth() +
+    "/" +
+    date.getDate() +
+    " " +
+    date.getHours() +
+    ":" +
+    date.getMinutes() +
+    ":" +
+    date.getSeconds();
+
+  console.log(str);
+  return str;
+}
