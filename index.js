@@ -51,7 +51,7 @@ if (buildOutput.flag == false) {
 app.use("", express.static(targetDir));
 
 //启动server并监听再80端口
-var server = app.listen(80, function() {
+var server = app.listen(7999, function() {
   console.log("应用实例启动成功!");
 });
 
