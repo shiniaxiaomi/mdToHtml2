@@ -1,3 +1,5 @@
+博客地址: http://luyingjie.cn
+
 git add . && git commit -m 'auto commit' && git push
 
 forever stop index.js
