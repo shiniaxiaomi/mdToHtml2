@@ -21,7 +21,7 @@ renderer.heading = function(text, level) {
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
     var url = text.match('href=.*">')[0];
-    url = url.substring(6, url.length - 2);
+    url = url.substring(6, url.length - 2).replace(".md",".html");
     var str = text.match(">.*<")[0];
     text = str.substring(1, str.length - 1);
     //暂存标签,用于生成大纲
