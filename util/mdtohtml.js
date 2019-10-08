@@ -103,7 +103,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
       //生成toc目录
-      var tocHtml = fileUtil.getTocHtml(titleList);
+      var tocObj = fileUtil.getTocHtml(titleList);
 
       //进行模板的参数替换
       var html = tempalte;
@@ -111,18 +111,20 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
         //替换[TOC]
         noteHtml = noteHtml.replace("[TOC]", "");
         //替换toc目录
-        html = html.replace("#{top-toc}", tocHtml);
+        html = html.replace("#{top-toc}", tocObj.html);
       } else {
         //替换toc目录
         html = html.replace("#{top-toc}", ""); //清空toc标记为
       }
 
       html = html
+        //SEO优化
         .replace("#{title}", filename)
-        .replace("#{keywords}", filename)
-        .replace("#{content}", filename)
+        .replace("#{description}", tocObj.str)//标题的拼接作为描述
+
+        //内容替换
         .replace(new RegExp("#{staticPath}", "gm"), staticPath)
-        .replace("#{sidebar-toc}", tocHtml)
+        .replace("#{sidebar-toc}", tocObj.html)
         .replace("#{sidebar-file}", dirHtml)
         .replace("#{body}", noteHtml);
 

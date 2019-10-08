@@ -166,23 +166,25 @@ function buildTocObj(titleData, start, end, level, srcData) {
 }
 
 //构建并生成toc目录Html
-function buildTocHtml(titleData, titleHtml) {
+function buildTocHtml(titleData, titleObj) {
   if (titleData.children.length == 0) {
-    titleHtml.str +=
+    titleObj.html +=
       `<li><a href="#` + titleData.id + `">` + titleData.text + `</a></li>`;
+    titleObj.str+=titleData.text+",";
     return;
   }
 
   if (titleData.level != -1) {
-    titleHtml.str +=
+    titleObj.html +=
       `<li><a href="#` + titleData.id + `">` + titleData.text + `</a><ul>`;
+    titleObj.str+=titleData.text+",";
   }
 
   titleData.children.map(item => {
-    buildTocHtml(item, titleHtml);
+    buildTocHtml(item, titleObj);
   });
   if (titleData.level != -1) {
-    titleHtml.str += `</ul></li>`;
+    titleObj.html += `</ul></li>`;
   }
 }
 
@@ -199,11 +201,12 @@ exports.getTocHtml = function(srcData) {
     children: []
   };
   buildTocObj(titleData, 0, srcData.length, 1, srcData);
-  var titleHtml = {
-    str: ""
+  var titleObj = {
+    html: "",
+    str:"",
   };
-  buildTocHtml(titleData, titleHtml);
-  return titleHtml.str;
+  buildTocHtml(titleData, titleObj);
+  return titleObj;
 };
 
 //删除目录
