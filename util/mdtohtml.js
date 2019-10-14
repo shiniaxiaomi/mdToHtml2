@@ -10,6 +10,7 @@ const renderer = new marked.Renderer(); //创建markdown渲染对象
 
 //渲染a标签时的回调
 renderer.link = function(href, title, text) {
+  href = href.replace(".md", ".html"); //将.md结尾的链接转换成.html结尾的
   return `<a target="_blank" href="${href}">${text}</a>`;
 };
 
@@ -21,7 +22,7 @@ renderer.heading = function(text, level) {
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
     var url = text.match('href=.*">')[0];
-    url = url.substring(6, url.length - 2).replace(".md",".html");
+    url = url.substring(6, url.length - 2).replace(".md", ".html");
     var str = text.match(">.*<")[0];
     text = str.substring(1, str.length - 1);
     //暂存标签,用于生成大纲
@@ -119,8 +120,8 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       html = html
         //SEO优化
-        .replace(new RegExp("#{title}", "gm"), filename)//替换所有的title
-        .replace("#{description}", tocObj.str)//标题的拼接作为描述
+        .replace(new RegExp("#{title}", "gm"), filename) //替换所有的title
+        .replace("#{description}", tocObj.str) //标题的拼接作为描述
 
         //内容替换
         .replace(new RegExp("#{staticPath}", "gm"), staticPath)

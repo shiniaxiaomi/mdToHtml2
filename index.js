@@ -15,20 +15,22 @@ var staticPath = undefined; //静态资源路径
 var isNeedClone = undefined; //需要clone
 
 //本地测试
-if(os.type()!="Windows_NT"){//线上
+if (os.type() != "Windows_NT") {
+  //线上
   gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
   srcDir = "/note"; //原笔记存放路径
   targetDir = "/html"; //html生成路径
   // staticPath = "http://47.105.165.211"; //静态资源路径
   staticPath = ""; //静态资源路径
-  isNeedClone=true;//需要clone
-}else{//本地
+  isNeedClone = true; //需要clone
+} else {
+  //本地
   gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-  // srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-  srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
-  // targetDir = "C:\\Users\\Administrator\\Desktop\\html";
-  targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
-  staticPath = "http://localhost";
+  srcDir = "C:\\Users\\Administrator\\Desktop\\note";
+  // srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+  targetDir = "C:\\Users\\Administrator\\Desktop\\html";
+  // targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+  staticPath = "";
   isNeedClone = false; //本地调试不需要clone
 }
 
