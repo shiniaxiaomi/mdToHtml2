@@ -45,6 +45,14 @@ window.onload = function() {
   for(var i=0;i<folderList.length;i++){
     folderClick.call(folderList[i])
   }
+
+  //延迟加载所有图片
+  var imgs=document.getElementsByTagName("img");
+  for(var i=0;i<imgs.length;i++){
+    var img=imgs[i];
+    img.setAttribute("src",img.getAttribute("buff"));//重新设置src,用来加载图片
+  }
+
 };
 
 //判断是否是PC端

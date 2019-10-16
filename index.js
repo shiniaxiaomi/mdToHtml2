@@ -6,40 +6,17 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express(); //获取app对象
 const path = require("path");
 const build = require("./build"); //获取构建对象
-const os = require("os");
 
-var gitUrl = undefined; //git网址
-var srcDir = undefined; //原笔记存放路径
-var targetDir = undefined; //html生成路径
-var staticPath = undefined; //静态资源路径
-var isNeedClone = undefined; //需要clone
-
-//本地测试
-if(os.type()!="Windows_NT"){//线上
-  gitUrl = "https://github.com/shiniaxiaomi/note.git"; //git网址
-  srcDir = "/note"; //原笔记存放路径
-  targetDir = "/html"; //html生成路径
-  // staticPath = "http://47.105.165.211"; //静态资源路径
-  staticPath = ""; //静态资源路径
-  isNeedClone=true;//需要clone
-}else{//本地
-  gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-  // srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-  srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
-  // targetDir = "C:\\Users\\Administrator\\Desktop\\html";
-  targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
-  staticPath = "http://localhost";
-  isNeedClone = false; //本地调试不需要clone
-}
+const varUtil=require("./util/varUtil"); //获取到公共变量
 
 //构建笔记html
 var buildOutput = build.startToBuild(
-  gitUrl,
-  srcDir,
-  targetDir,
-  staticPath,
+  varUtil.gitUrl,
+  varUtil.srcDir,
+  varUtil.targetDir,
+  varUtil.staticPath,
   true,
-  isNeedClone
+  varUtil.isNeedClone
 ); //删除原生成的笔记html
 if (buildOutput.flag == false) {
   //如果报错,则打印日志
@@ -47,7 +24,7 @@ if (buildOutput.flag == false) {
 }
 
 //设置静态资源路径(将html生成路径设置为静态资源路径)
-app.use("", express.static(targetDir));
+app.use("", express.static(varUtil.targetDir));
 
 //启动server并监听再80端口
 var server = app.listen(7999, function() {
@@ -56,7 +33,7 @@ var server = app.listen(7999, function() {
 
 //当'/'请求时返回首页
 app.get("/", function(req, res) {
-  res.sendFile(path.join(targetDir, "index.html"));
+  res.sendFile(path.join(varUtil.targetDir, "index.html"));
 });
 
 app.post("/syncNote", urlencodedParser, function(req, res) {
@@ -65,10 +42,10 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
     //构建笔记html
     console.log("同步按钮: 开始构建笔记--------------");
     var output = build.startToBuild(
-      gitUrl,
-      srcDir,
-      targetDir,
-      staticPath,
+      varUtil.gitUrl,
+      varUtil.srcDir,
+      varUtil.targetDir,
+      varUtil.staticPath,
       false,
       true //允许clone
     ); //不删除原生成的笔记html
@@ -88,10 +65,10 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
 schedule.scheduleJob("0 0 4 * * *", function() {
   console.log(getDate() + " 定时任务开始构建笔记--------------");
   var output = build.startToBuild(
-    gitUrl,
-    srcDir,
-    targetDir,
-    staticPath,
+    varUtil.gitUrl,
+    varUtil.srcDir,
+    varUtil.targetDir,
+    varUtil.staticPath,
     true, //删除原来的笔记生成的html的内容,重新构建
     true //允许克隆
   );
