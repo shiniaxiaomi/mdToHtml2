@@ -17,7 +17,11 @@ renderer.link = function(href, title, text) {
 };
 
 renderer.image = function(href, title, text) {
-  var imgHref = href.match(".img.*")[0].substring(5); //将图片的绝对路径转化为相对路径
+  var imgHref = href.match(".img.*");
+  //判空,防止链接错误导致html构建失败,增加了代码的健壮性
+  if (imgHref != null) {
+    imgHref = imgHref.match(".img.*")[0].substring(5); //将图片的绝对路径转化为相对路径
+  }
   return `<img src="${varUtil.staticPath}/css/loading.gif" buff='${varUtil.staticPath}/.img/${imgHref}'/>`;
 };
 
