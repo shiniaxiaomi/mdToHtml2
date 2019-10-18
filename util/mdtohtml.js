@@ -6,7 +6,7 @@ const minify = require("html-minifier").minify; //文本压缩
 const mapDirUtil = require("./mapdirutil"); //遍历文件夹的工具类
 const fileUtil = require("./fileutil"); //文件工具类
 
-const varUtil=require("./varUtil"); //获取到公共变量
+const varUtil = require("./varUtil"); //获取到公共变量
 
 const renderer = new marked.Renderer(); //创建markdown渲染对象
 
@@ -16,9 +16,10 @@ renderer.link = function(href, title, text) {
   return `<a target="_blank" href="${href}">${text}</a>`;
 };
 
-renderer.image=function(href, title, text){
-  return `<img src="${varUtil.staticPath}/css/loading.gif" buff='${href}'/>`;
-}
+renderer.image = function(href, title, text) {
+  var imgHref = href.match(".img.*")[0].substring(5); //将图片的绝对路径转化为相对路径
+  return `<img src="${varUtil.staticPath}/css/loading.gif" buff='${varUtil.staticPath}/.img/${imgHref}'/>`;
+};
 
 //渲染h1-h6标签时的回调
 renderer.heading = function(text, level) {
@@ -49,8 +50,6 @@ renderer.heading = function(text, level) {
 
   return `<h${level} id="${titleId}">${text}</h${level}>`;
 };
-
-
 
 //设置markdown解析
 marked.setOptions({
