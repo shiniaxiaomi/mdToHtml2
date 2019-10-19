@@ -12,6 +12,7 @@ const renderer = new marked.Renderer(); //创建markdown渲染对象
 
 //渲染a标签时的回调
 renderer.link = function(href, title, text) {
+  href = href.replace("D:\\note", ""); //将本地的笔记链接转换成url链接
   href = href.replace(".md", ".html"); //将.md结尾的链接转换成.html结尾的
   return `<a target="_blank" href="${href}">${text}</a>`;
 };
