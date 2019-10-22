@@ -20,6 +20,11 @@ renderer.image=function(href, title, text){
   return `<img src="${varUtil.staticPath}/css/loading.gif" buff='${href}'/>`;
 }
 
+//渲染表格时在外面套一层div,可以为其设置超过宽度时滚动
+renderer.table=function(header, body){
+  return `<div class='myTable'><table>${header}${body}</table></div>`;
+}
+
 //渲染h1-h6标签时的回调
 renderer.heading = function(text, level) {
   var titleId = Math.random()

@@ -17,9 +17,9 @@ if(os.type()!="Windows_NT"){//线上
 }else{//本地
     gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
     // srcDir = "C:\\Users\\Administrator\\Desktop\\note";
-    srcDir = "C:\\Users\\yingjie.lu\\Desktop\\note";
+    srcDir = "D:\\note";
     // targetDir = "C:\\Users\\Administrator\\Desktop\\html";
-    targetDir = "C:\\Users\\yingjie.lu\\Desktop\\html";
+    targetDir = "D:\\html";
     staticPath = "http://localhost:7999";
     isNeedClone = false; //本地调试不需要clone
 }
