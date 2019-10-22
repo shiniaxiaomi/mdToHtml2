@@ -42,17 +42,16 @@ window.onload = function() {
   initSearchData();
 
   //initialize(关闭所有文件夹)
-  for(var i=0;i<folderList.length;i++){
-    folderClick.call(folderList[i])
+  for (var i = 0; i < folderList.length; i++) {
+    folderClick.call(folderList[i]);
   }
 
   //延迟加载所有图片
-  var imgs=document.getElementsByTagName("img");
-  for(var i=0;i<imgs.length;i++){
-    var img=imgs[i];
-    img.setAttribute("src",img.getAttribute("buff"));//重新设置src,用来加载图片
+  var imgs = document.getElementsByTagName("img");
+  for (var i = 0; i < imgs.length; i++) {
+    var img = imgs[i];
+    img.setAttribute("src", img.getAttribute("buff")); //重新设置src,用来加载图片
   }
-
 };
 
 //判断是否是PC端
@@ -104,7 +103,7 @@ function searchNote() {
 //给侧边栏添加事件
 function addSidebarEvent() {
   folderList = document.querySelectorAll(".folder");
-  for(var i=0;i<folderList.length;i++){
+  for (var i = 0; i < folderList.length; i++) {
     folderList[i].addEventListener("click", folderClick);
   }
   // folderList.forEach(ele => ele.addEventListener("click", folderClick));
@@ -258,9 +257,9 @@ function getSearchElement() {
 //初始化搜索数据
 function initSearchData() {
   var fileBuff = document.querySelectorAll("#top-file .icon-file");
-  
-  for(var i=0;i<fileBuff.length;i++){
-    if(fileBuff[i].nextElementSibling==null) continue;
+
+  for (var i = 0; i < fileBuff.length; i++) {
+    if (fileBuff[i].nextElementSibling == null) continue;
     var node = {
       content: fileBuff[i].nextElementSibling.innerText,
       url: fileBuff[i].parentElement.getAttribute("href"),
@@ -270,7 +269,7 @@ function initSearchData() {
   }
 
   var titleBuff = document.querySelectorAll("#top-content a");
-  for(var i=0;i<titleBuff.length;i++){
+  for (var i = 0; i < titleBuff.length; i++) {
     var node = {
       content: titleBuff[i].innerText,
       url: titleBuff[i].getAttribute("href"),
@@ -284,7 +283,7 @@ function initSearchData() {
 function showSearchDiv() {
   //首次显示,进行初始化
   if (initSearchDataBuff == undefined) {
-    for(let i=0;i<dataArr.length;i++){
+    for (let i = 0; i < dataArr.length; i++) {
       var p = document.createElement("p");
 
       var icon = document.createElement("i");
@@ -326,14 +325,27 @@ function hiddenSearchDiv() {
 //过滤和搜索信息
 function searchKeywords() {
   var e = event.target || event.srcElement;
-  var str = e.value;
+  var str = e.value.trim(); //获取输入关键字并取出两端空格
   dataList.innerHTML = ""; //清空div下的所有P元素
   if (str == "") {
     dataList.innerHTML = initSearchDataBuff;
   } else {
-    for(let i=0;i<dataArr.length;i++){
-       //全部转化为小写再进行比较,就可以忽略大小写进行查找
-       if (dataArr[i].content.toLowerCase().indexOf(str.toLowerCase()) != -1) {
+    //全部转化为小写再进行比较,就可以忽略大小写进行查找
+    var keywords = str.toLowerCase().split(" "); //以空格分割成多关键字
+
+    for (let i = 0; i < dataArr.length; i++) {
+      var content = dataArr[i].content.toLowerCase(); //将数据转化成小写
+      var isContain = true;
+      //如果全部包含,才会添加内容; 如果有一个不包含,不会添加内容
+      for (let j = 0; j < keywords.length; j++) {
+        if (content.indexOf(keywords[j]) == -1) {
+          //不包含
+          isContain = false;
+          break;
+        }
+      }
+
+      if (isContain) {
         var p = document.createElement("p");
 
         var icon = document.createElement("i");

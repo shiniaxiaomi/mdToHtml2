@@ -93,7 +93,7 @@ function getDirData(srcDir, targetDir, staticPath) {
   };
   buff.children.push({
     isDir: false,
-    name: "首页",
+    name: "首页.md",
     link: staticPath + "/" + path.join("index.html")
   });
   dirData.children.map(item => {
@@ -133,6 +133,8 @@ function _getDirData(srcDir, targetDir, relativePath, dirData, staticPath) {
       };
       dirData.children.push(dirBuff);
       _getDirData(srcDir, targetDir, relativePath, dirBuff, staticPath);
+
+      DirUp(dirData); //如果dirBuff是文件夹,那么dirData(dirBuff的上一级)必将要做文件夹调整(置顶)
     } else {
       dirData.children.push({
         isDir: false,
@@ -142,6 +144,27 @@ function _getDirData(srcDir, targetDir, relativePath, dirData, staticPath) {
     }
     relativePath = buff; //恢复原来的相对路径
   });
+}
+
+//调整文件夹位置到顶部
+function DirUp(dirBuff) {
+  var buff = [];
+  dirBuff.children.map(item => {
+    //文件夹
+    if (item.isDir) {
+      buff.push(item);
+    }
+  });
+  dirBuff.children.map(item => {
+    //不是文件夹
+    if (!item.isDir) {
+      buff.push(item);
+    }
+  });
+  dirBuff.children = [];
+  for (var i = 0; i < buff.length; i++) {
+    dirBuff.children.push(buff[i]);
+  }
 }
 
 //构建toc目录对象
@@ -170,14 +193,14 @@ function buildTocHtml(titleData, titleObj) {
   if (titleData.children.length == 0) {
     titleObj.html +=
       `<li><a href="#` + titleData.id + `">` + titleData.text + `</a></li>`;
-    titleObj.str+=titleData.text+",";
+    titleObj.str += titleData.text + ",";
     return;
   }
 
   if (titleData.level != -1) {
     titleObj.html +=
       `<li><a href="#` + titleData.id + `">` + titleData.text + `</a><ul>`;
-    titleObj.str+=titleData.text+",";
+    titleObj.str += titleData.text + ",";
   }
 
   titleData.children.map(item => {
@@ -203,7 +226,7 @@ exports.getTocHtml = function(srcData) {
   buildTocObj(titleData, 0, srcData.length, 1, srcData);
   var titleObj = {
     html: "",
-    str:"",
+    str: ""
   };
   buildTocHtml(titleData, titleObj);
   return titleObj;
