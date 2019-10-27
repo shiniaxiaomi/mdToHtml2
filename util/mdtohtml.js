@@ -10,6 +10,23 @@ const varUtil = require("./varUtil"); //获取到公共变量
 
 const renderer = new marked.Renderer(); //创建markdown渲染对象
 
+var h1_times = 0;
+var h2_times = 0;
+var h3_times = 0;
+var h4_times = 0;
+var h5_times = 0;
+var h6_times = 0;
+
+//完成一篇文章的解析后标题的次数清零
+function cleanTitleTimes() {
+  h1_times = 0;
+  h2_times = 0;
+  h3_times = 0;
+  h4_times = 0;
+  h5_times = 0;
+  h6_times = 0;
+}
+
 //渲染a标签时的回调
 renderer.link = function(href, title, text) {
   //如果是笔记链接
@@ -32,15 +49,59 @@ renderer.image = function(href, title, text) {
 };
 
 //渲染表格时在外面套一层div,可以为其设置超过宽度时滚动
-renderer.table=function(header, body){
+renderer.table = function(header, body) {
   return `<div class='myTable'><table>${header}${body}</table></div>`;
-}
+};
 
 //渲染h1-h6标签时的回调
 renderer.heading = function(text, level) {
-  var titleId = Math.random()
-    .toString()
-    .substr(3, 15);
+  //记录序号
+  switch (level) {
+    case 1:
+      h1_times++;
+      h2_times = 0;
+      h3_times = 0;
+      h4_times = 0;
+      h5_times = 0;
+      h6_times = 0;
+      break;
+    case 2:
+      h2_times++;
+      h3_times = 0;
+      h4_times = 0;
+      h5_times = 0;
+      h6_times = 0;
+      break;
+    case 3:
+      h3_times++;
+      h4_times = 0;
+      h5_times = 0;
+      h6_times = 0;
+      break;
+    case 4:
+      h4_times++;
+      h5_times = 0;
+      h6_times = 0;
+      break;
+    case 5:
+      h5_times++;
+      break;
+    case 6:
+      h6_times++;
+      break;
+  }
+
+  // var titleId = Math.random()
+  //   .toString()
+  //   .substr(3, 15);
+  var titleId = h1_times != 0 ? h1_times + "." : "";
+  titleId += h2_times != 0 ? h2_times + "." : "";
+  titleId += h3_times != 0 ? h3_times + "." : "";
+  titleId += h4_times != 0 ? h4_times + "." : "";
+  titleId += h5_times != 0 ? h5_times + "." : "";
+  titleId += h6_times != 0 ? h6_times + "." : "";
+  titleId += text;
+
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
     var url = text.match('href=.*">')[0];
@@ -53,7 +114,7 @@ renderer.heading = function(text, level) {
       text: text,
       id: titleId
     });
-    return `<h${level} id="${titleId}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
+    return `<h${level} id="${text}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
   }
 
   //暂存标签,用于生成大纲
@@ -125,6 +186,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       //解析文件并生成html
       var noteHtml = marked(noteStr, { renderer: renderer });
+      cleanTitleTimes(); //完成一篇解析后标题次数清零
       //生成toc目录
       var tocObj = fileUtil.getTocHtml(titleList);
 
