@@ -107,7 +107,7 @@ function getDirData(srcDir, targetDir, staticPath) {
   };
   buff.children.push({
     isDir: false,
-    name: "首页.md",
+    name: "首页",
     link: staticPath + "/" + path.join("index.html")
   });
   dirData.children.map(item => {
@@ -157,7 +157,7 @@ function _getDirData(srcDir, targetDir, relativePath, dirData, staticPath) {
       }
       dirData.children.push({
         isDir: false,
-        name: item,
+        name: item.replace(".md",""),//去掉.md的后缀
         link: staticPath + "/" + path.join(relativePath).replace(".md", ".html")
       });
     }

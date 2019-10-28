@@ -209,7 +209,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
       html = html
         //SEO优化
-        .replace(new RegExp("#{title}", "gm"), filename) //替换所有的title
+        .replace(new RegExp("#{title}", "gm"), filename.replace(".md","")) //替换所有的title
         .replace("#{description}", tocObj.str) //标题的拼接作为描述
 
         //内容替换
