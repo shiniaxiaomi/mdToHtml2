@@ -137,7 +137,7 @@ function _getDirData(srcDir, targetDir, relativePath, dirData, staticPath) {
       DirUp(dirData); //如果dirBuff是文件夹,那么dirData(dirBuff的上一级)必将要做文件夹调整(置顶)
     } else {
       //排除.gitignore和note.dat文件
-      if (item.indexOf(".gitignore") != -1 || item.indexOf("note.bat") != -1) {
+      if (item.indexOf(".gitignore") != -1 || item.indexOf("note.bat") != -1 ||  item.indexOf("README.md") != -1) {
         relativePath = buff; //恢复原来的相对路径
         return;
       }
