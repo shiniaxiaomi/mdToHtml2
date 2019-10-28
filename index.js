@@ -36,10 +36,10 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(varUtil.targetDir, "index.html"));
 });
 
-//当'search'关键字
-app.get("/search", function(req, res) {
+//当'/search/java'搜索java关键字时
+app.get("/search/:blog", function(req, res) {
 
-  var blogName=req.query.blog.trim().toLowerCase();//转化成小写
+  var blogName=req.params.blog.trim().toLowerCase();//转化成小写
   var resultBlog=undefined;//保存匹配度最高的blog对象
   for(var i=0;i<varUtil.blogArr.length;i++){
     if(varUtil.blogArr[i].name.toLowerCase().indexOf(blogName)!=-1){
