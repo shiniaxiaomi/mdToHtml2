@@ -3,6 +3,7 @@ const shell = require("shelljs");
 const path = require("path");
 const mapDirUtil = require("./mapdirutil");
 const minify = require("html-minifier").minify; //文本压缩
+const varUtil=require("./varUtil.js");
 // const marked = require("marked"); //markdown解析
 
 //构建并生成对应的index.html
@@ -29,9 +30,22 @@ const minify = require("html-minifier").minify; //文本压缩
 //   }
 // }
 
+//将dirData树状对象转化为Blog数组
+function dirDataToBlogArr(dirData){
+  if(dirData.isDir==false){
+    varUtil.blogArr.push(dirData);
+    return;
+  }
+
+  for(var i=0;i<dirData.children.length;i++){
+    dirDataToBlogArr(dirData.children[i])
+  }
+}
+
 //获取目录的html
 function getDirHtml(srcDir, targetDir, staticPath) {
-  var dirData = getDirData(srcDir, targetDir, staticPath);
+  var dirData = getDirData(srcDir, targetDir, staticPath);//获取dirData树状对象
+  dirDataToBlogArr(dirData);//将dirData树状对象转化为Blog数组并保存起来,供查询使用
   var dirHtml = { str: "" };
   buildDirDataToHtml(dirData, dirHtml);
   return dirHtml.str;

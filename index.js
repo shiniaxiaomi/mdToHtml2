@@ -38,7 +38,26 @@ app.get("/", function(req, res) {
 
 //当'search'关键字
 app.get("/search", function(req, res) {
-  res.sendFile(path.join(varUtil.targetDir, "index.html"));
+
+  var blogName=req.query.blog.trim().toLowerCase();//转化成小写
+  var resultBlog=undefined;//保存匹配度最高的blog对象
+  for(var i=0;i<varUtil.blogArr.length;i++){
+    if(varUtil.blogArr[i].name.toLowerCase().indexOf(blogName)!=-1){
+      if(resultBlog==undefined){
+        resultBlog=varUtil.blogArr[i];
+      }else{
+        //匹配规则,关键词占比越高的返回
+        if(varUtil.blogArr[i].name.length<resultBlog.name.length){
+          resultBlog=varUtil.blogArr[i];
+        }
+      }
+    }
+  }
+  if(resultBlog==undefined){
+    res.sendFile(path.join(varUtil.targetDir, "index.html"));
+  }else{
+    res.redirect(resultBlog.link);//重定向到搜索到的blog链接
+  }
 });
 
 app.post("/syncNote", urlencodedParser, function(req, res) {

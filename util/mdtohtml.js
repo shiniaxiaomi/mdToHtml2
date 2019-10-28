@@ -129,7 +129,6 @@ renderer.heading = function(text, level) {
     });
     return `<h${level} id="${titleId}">${text}</h${level}>`;
   }
-
   
 };
 
