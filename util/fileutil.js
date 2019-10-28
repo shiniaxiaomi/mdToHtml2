@@ -47,11 +47,14 @@ function getDirHtml(srcDir, targetDir, staticPath) {
   var dirData = getDirData(srcDir, targetDir, staticPath);//获取dirData树状对象
   dirDataToBlogArr(dirData);//将dirData树状对象转化为Blog数组并保存起来,供查询使用
   var dirHtml = { str: "" };
-  buildDirDataToHtml(dirData, dirHtml);
+  var dirDetailHtml = { str: "" };
+  buildDirDataToHtml(dirData, dirHtml);//生成文件树状目录的html
+  buildDirDataToDetailHtml(dirData,dirDetailHtml);//生成文件树状展开目录的html
+  varUtil.dirDetailHtml=dirDetailHtml.str;//保存dirDetailHtml为全局变量
   return dirHtml.str;
 }
 
-//构建html
+//构建文件树状目录的html
 function buildDirDataToHtml(dirData, dirHtml) {
   if (dirData.isDir) {
     if (dirData.children.length == 0) {
@@ -83,6 +86,42 @@ function buildDirDataToHtml(dirData, dirHtml) {
       "'><i class='iconfont icon-file'></i><div>" +
       dirData.name +
       "</div></a></li>";
+  }
+}
+
+//构建文件树状展开目录的html
+function buildDirDataToDetailHtml(dirData, dirHtml) {
+  if (dirData.isDir) {
+    if (dirData.children.length == 0) {
+      dirHtml.str +=
+        "<li><a href='javascript:void(0);'><span>" +
+        dirData.name +
+        "</span></a></li>";
+    } else {
+      //文件夹
+      if (dirData.name == "总目录") {
+        dirData.children.map(item => {
+          buildDirDataToDetailHtml(item, dirHtml);
+        });
+      } else {
+        dirHtml.str +=
+          "<li><a style='cursor:default;' href='javascript:void(0);'><span><i class='iconfont icon-folder'></i>" +
+          dirData.name +
+          "</span></a><ul>";
+        dirData.children.map(item => {
+          buildDirDataToDetailHtml(item, dirHtml);
+        });
+        dirHtml.str += "</ul></li>";
+      }
+    }
+  } else {
+    //文件
+    dirHtml.str +=
+      "<li></i><a href='" +
+      dirData.link +
+      "'><span><i class='iconfont icon-file'></i>" +
+      dirData.name +
+      "</span></a></li>";
   }
 }
 

@@ -273,7 +273,8 @@ function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
   var indexHtml = template
     .replace(new RegExp("#{staticPath}", "gm"), staticPath)
     .replace("#{sidebar-file}", dirHtml)
-    .replace("#{body}", noteHtml);
+    .replace("#{body}", noteHtml)
+    .replace("#{toc-detail}",varUtil.dirDetailHtml);
 
   try {
     fs.writeFileSync(
