@@ -54,7 +54,7 @@ app.get("/search", function(req, res) {
     }
   }
   if(resultBlog==undefined){
-    res.sendFile(path.join(varUtil.targetDir, "index.html"));
+    res.sendFile(path.join(varUtil.targetDir, "index.html"));//如果没有找到,则返回首页
   }else{
     res.redirect(resultBlog.link);//重定向到搜索到的blog链接
   }
