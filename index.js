@@ -36,6 +36,11 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(varUtil.targetDir, "index.html"));
 });
 
+//当'search'关键字
+app.get("/search", function(req, res) {
+  res.sendFile(path.join(varUtil.targetDir, "index.html"));
+});
+
 app.post("/syncNote", urlencodedParser, function(req, res) {
   if (req.body.password == "123456") {
     //执行同步操作

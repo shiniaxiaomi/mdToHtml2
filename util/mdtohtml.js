@@ -94,13 +94,14 @@ renderer.heading = function(text, level) {
   // var titleId = Math.random()
   //   .toString()
   //   .substr(3, 15);
-  var titleId = h1_times != 0 ? h1_times + "." : "";
+  
+  var titleId="";
+  titleId = h1_times != 0 ? h1_times + "." : "";
   titleId += h2_times != 0 ? h2_times + "." : "";
   titleId += h3_times != 0 ? h3_times + "." : "";
   titleId += h4_times != 0 ? h4_times + "." : "";
   titleId += h5_times != 0 ? h5_times + "." : "";
   titleId += h6_times != 0 ? h6_times + "." : "";
-  titleId += text;
 
   //如果标题中有a标签,则将a标签放到h标签的下面
   if (text.indexOf("<a") != -1) {
@@ -108,23 +109,28 @@ renderer.heading = function(text, level) {
     url = url.substring(6, url.length - 2).replace(".md", ".html");
     var str = text.match(">.*<")[0];
     text = str.substring(1, str.length - 1);
+    //序号加上标题
+    titleId+=text;
     //暂存标签,用于生成大纲
     titleList.push({
       level: level,
       text: text,
       id: titleId
     });
-    return `<h${level} id="${text}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
+    return `<h${level} id="${titleId}"><a target="_blank" href="${url}">${text}</a></h${level}>`;
+  }else{
+    //序号加上标题
+    titleId+=text;
+    //暂存标签,用于生成大纲
+    titleList.push({
+      level: level,
+      text: text,
+      id: titleId
+    });
+    return `<h${level} id="${titleId}">${text}</h${level}>`;
   }
 
-  //暂存标签,用于生成大纲
-  titleList.push({
-    level: level,
-    text: text,
-    id: titleId
-  });
-
-  return `<h${level} id="${titleId}">${text}</h${level}>`;
+  
 };
 
 //设置markdown解析
