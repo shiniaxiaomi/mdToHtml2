@@ -214,6 +214,7 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
 
         //内容替换
         .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+        .replace("#{notePath}",path.join(srcDir, relativePath).replace(/\\/g,"/")) //替换本地的note绝对路径(D:/note/xxx.md)
         .replace("#{sidebar-toc}", tocObj.html)
         .replace("#{sidebar-file}", dirHtml)
         .replace("#{body}", noteHtml);
@@ -272,6 +273,7 @@ function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
   //进行模板的参数替换
   var indexHtml = template
     .replace(new RegExp("#{staticPath}", "gm"), staticPath)
+    .replace("#{notePath}",path.join(srcDir, "/README.md").replace(/\\/g,"/"))
     .replace("#{sidebar-file}", dirHtml)
     .replace("#{body}", noteHtml)
     .replace("#{toc-detail}",varUtil.dirDetailHtml);

@@ -329,6 +329,21 @@ pre > code {
   padding: 0.5rem;
   border-radius: 6px;
   opacity: 0.8;
+  text-decoration-line: none;
+}
+
+/* 编辑按钮的样式 */
+.edit {
+  z-index: 1000;
+  position: fixed;
+  right: 60px;
+  top: 14%;
+  border: none;
+  box-shadow: 0px 1px 6px 2px #bbb2b2;
+  padding: 0.5rem;
+  border-radius: 6px;
+  opacity: 0.8;
+  text-decoration-line: none;
 }
 
 .top-buttons {
@@ -346,6 +361,13 @@ pre > code {
 
 .folder {
   position: relative;
+}
+
+.icon-edit{
+  font-size: 24px !important;
+    line-height: 1.7rem;
+    color: #6d6d6d;
+    padding: 0px 2px;
 }
 
 .icon-folder {
@@ -385,9 +407,6 @@ pre > code {
   color: #888888;
 }
 
-.top {
-  text-decoration-line: none;
-}
 
 .folder-open {
   transform: rotate(-90deg);
