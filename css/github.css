@@ -186,7 +186,7 @@ table tr td:last-child {
   margin-bottom: 0;
 }
 
-.myTable{
+.myTable {
   overflow: auto;
 }
 
@@ -363,11 +363,11 @@ pre > code {
   position: relative;
 }
 
-.icon-edit{
+.icon-edit {
   font-size: 24px !important;
-    line-height: 1.7rem;
-    color: #6d6d6d;
-    padding: 0px 2px;
+  line-height: 1.7rem;
+  color: #6d6d6d;
+  padding: 0px 2px;
 }
 
 .icon-folder {
@@ -406,7 +406,6 @@ pre > code {
   font-weight: bold;
   color: #888888;
 }
-
 
 .folder-open {
   transform: rotate(-90deg);
@@ -450,4 +449,55 @@ pre > code {
 .on {
   background: #ededed;
   color: #000;
+}
+
+
+/* 弹出层样式 */
+@keyframes appear1 {
+  from {
+    -webkit-transform: translate(-50%, -50%) scale(0);
+    -moz-transform: translate(-50%, -50%) scale(0);
+    -ms-transform: translate(-50%, -50%) scale(0);
+    -o-transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: translate(-50%, -50%) scale(1);
+    -moz-transform: translate(-50%, -50%) scale(1);
+    -ms-transform: translate(-50%, -50%) scale(1);
+    -o-transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes disappear1 {
+  from {
+    -webkit-transform: translate(-50%, -50%) scale(1);
+    -moz-transform: translate(-50%, -50%) scale(1);
+    -ms-transform: translate(-50%, -50%) scale(1);
+    -o-transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: translate(-50%, -50%) scale(0);
+    -moz-transform: translate(-50%, -50%) scale(0);
+    -ms-transform: translate(-50%, -50%) scale(0);
+    -o-transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+/*
+my-msg
+*/
+.my-msg {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  -webkit-animation: appear1 0.5s;
+  -o-animation: appear1 0.5s;
+  animation: appear1 0.5s;
 }

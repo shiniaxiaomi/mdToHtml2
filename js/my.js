@@ -99,6 +99,16 @@ function searchNote() {
   showSearchDiv();
 }
 
+// 提示弹窗
+function tip(){
+  // layer.msg("正在打开Typora中...", {
+  //   time: 1000 //1s后自动关闭
+  // });
+  // my.msg("正在打开Typora中...",1000);
+  alert("111");
+  my.msg("正在打开Typora中...",1000);
+}
+
 //===============文件夹和大纲
 //给侧边栏添加事件
 function addSidebarEvent() {
@@ -448,4 +458,31 @@ function checkKeyCode(e) {
       }
       break;
   }
+}
+
+
+/**
+ * 提示弹出层工具
+ *@paramcontent 提示内容
+ *@paramtime 消失时间
+ *@paramcallback 窗口关闭时的函数调用
+*/
+var my={};
+var myMsgIndex=0;
+my.msg=function(content,time,callback){
+
+    var div = document.createElement("div");//创建p元素
+    div.innerHTML='<div id="my-msg-INDEX" class="center my-msg">CONTENT</div>'
+      .replace("INDEX",myMsgIndex)
+      .replace("CONTENT",content);
+    var divChild=div.firstChild;
+    document.body.appendChild(divChild)
+
+    if(time==undefined) time=2000;
+    setTimeout(function(){
+      document.body.removeChild(document.getElementById("my-msg-"+myMsgIndex));
+      if(callback!=null){
+        callback();
+      }
+    },time);
 }
