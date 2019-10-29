@@ -8,6 +8,7 @@ var isNeedClone = undefined; //需要clone
 
 //=======其他全局变量=============
 var blogArr=[];//存放blog名称的数组
+var noteSavePath="D:"; //note文件夹保存的盘符
 
 //本地测试
 if (os.type() != "Windows_NT") {
@@ -21,8 +22,8 @@ if (os.type() != "Windows_NT") {
 } else {
   //本地
   gitUrl = "https://github.com/shiniaxiaomi/mdToHtml.git";
-  srcDir = "D:\\note";
-  targetDir = "D:\\html";
+  srcDir = noteSavePath+"\\note";
+  targetDir = noteSavePath+"\\html";
   staticPath = "http://localhost:7999";
   isNeedClone = false; //本地调试不需要clone
 }
@@ -36,3 +37,4 @@ exports.isNeedClone = isNeedClone; //需要clone
 
 //=====其他变量======
 exports.blogArr=blogArr;
+exports.noteSavePath=noteSavePath;
