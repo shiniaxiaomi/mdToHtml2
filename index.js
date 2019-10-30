@@ -9,6 +9,9 @@ const build = require("./build"); //获取构建对象
 
 const varUtil=require("./util/varUtil"); //获取到公共变量
 
+varUtil.logTime();//打印时间
+
+
 //构建笔记html
 var buildOutput = build.startToBuild(
   varUtil.gitUrl,
@@ -28,7 +31,7 @@ app.use("", express.static(varUtil.targetDir));
 
 //启动server并监听再80端口
 var server = app.listen(7999, function() {
-  console.log("应用实例启动成功!");
+  varUtil.logTime("应用实例启动成功")
 });
 
 //当'/'请求时返回首页

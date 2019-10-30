@@ -7,6 +7,7 @@ const mapDirUtil = require("./mapdirutil"); //遍历文件夹的工具类
 const fileUtil = require("./fileutil"); //文件工具类
 
 const varUtil = require("./varUtil"); //获取到公共变量
+const templateUtil=require("./templateutil"); //获取模板工具类
 
 const renderer = new marked.Renderer(); //创建markdown渲染对象
 
@@ -90,10 +91,6 @@ renderer.heading = function(text, level) {
       h6_times++;
       break;
   }
-
-  // var titleId = Math.random()
-  //   .toString()
-  //   .substr(3, 15);
   
   var titleId="";
   titleId = h1_times != 0 ? h1_times + "." : "";
@@ -154,16 +151,17 @@ marked.setOptions({
   xhtml: false
 });
 
-var tempalte = ""; //模板内容
 var noteData = {}; //存放note的原数据
 var titleList = []; //暂存h1-h6标签的内容
 var dirHtml = ""; //目录的html结构
 
+var contextTemplate=fs.readFileSync(path.join(__dirname, "..", "/html/template.html")).toString();//读取内容模板字符串
+var indexTemplate=fs.readFileSync(path.join(".", "/html/index.html")).toString()//读取index模板字符串
+
+var contextTemplateArr=templateUtil.analysisTemplate(contextTemplate);//通过内容模板生成内容模板数组
+var indexTempalteArr=templateUtil.analysisTemplate(indexTemplate);//通过index模板生成index模板数组
+
 exports.startToBuild = function(srcDir, targetDir, staticPath) {
-  // 同步读取 模板内容
-  tempalte = fs
-    .readFileSync(path.join(__dirname, "..", "/html/template.html"))
-    .toString();
 
   //获取目录的html结构
   dirHtml = fileUtil.getDirHtml(srcDir, targetDir, staticPath);
@@ -194,47 +192,23 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
       cleanTitleTimes(); //完成一篇解析后标题次数清零
       //生成toc目录
       var tocObj = fileUtil.getTocHtml(titleList);
+      noteHtml = noteHtml.replace("[TOC]", "");//清空toc标记
 
-      //进行模板的参数替换
-      var html = tempalte;
-      if (noteHtml.indexOf("[TOC]") != -1) {
-        //替换[TOC]
-        noteHtml = noteHtml.replace("[TOC]", "");
-        //替换toc目录
-        html = html.replace("#{top-toc}", tocObj.html);
-      } else {
-        //替换toc目录
-        html = html.replace("#{top-toc}", ""); //清空toc标记为
-      }
-
-      html = html
-        //SEO优化
-        .replace(new RegExp("#{title}", "gm"), filename.replace(".md","")) //替换所有的title
-        .replace("#{description}", tocObj.str) //标题的拼接作为描述
-
-        //内容替换
-        .replace(new RegExp("#{staticPath}", "gm"), staticPath)
-        .replace("#{notePath}",path.join(varUtil.noteSavePath+"/note", relativePath).replace(/\\/g,"/")) //替换本地的note绝对路径(D:/note/xxx.md)
-        .replace("#{sidebar-toc}", tocObj.html)
-        .replace("#{sidebar-file}", dirHtml)
-        .replace("#{body}", noteHtml);
-
+      //SEO优化
+      templateUtil.replaceWithTemplate(contextTemplateArr,"title",filename.replace(".md",""));//替换所有的title
+      templateUtil.replaceWithTemplate(contextTemplateArr,"description",tocObj.str);//标题的拼接作为描述
+      //内容替换
+      templateUtil.replaceWithTemplate(contextTemplateArr,"staticPath",varUtil.staticPath);
+      templateUtil.replaceWithTemplate(contextTemplateArr,"notePath",path.join(varUtil.noteSavePath+"/note", relativePath).replace(/\\/g,"/"));//替换本地的note绝对路径(D:/note/xxx.md)
+      templateUtil.replaceWithTemplate(contextTemplateArr,"sidebar-toc",tocObj.html);
+      templateUtil.replaceWithTemplate(contextTemplateArr,"sidebar-file",dirHtml);
+      templateUtil.replaceWithTemplate(contextTemplateArr,"body",noteHtml);
+      templateUtil.replaceWithTemplate(contextTemplateArr,"top-toc",tocObj.html);//替换toc目录
+      
       //生成html
-      var targetFile = path
-        .join(targetDir, relativePath)
-        .replace(".md", ".html");
-
+      var html=templateUtil.buildTemplateArrToHtml(contextTemplateArr);
       try {
-        fs.writeFileSync(
-          targetFile,
-          html
-          // minify(html, {
-          //   removeComments: true,
-          //   collapseWhitespace: true,
-          //   minifyJS: true,
-          //   minifyCSS: true
-          // }) //开启文本压缩
-        );
+        fs.writeFile(path.join(targetDir, relativePath).replace(".md", ".html"),html,function(){});
       } catch (err) {
         console.log("html文件写入失败:" + err);
       }
@@ -257,39 +231,33 @@ exports.startToBuild = function(srcDir, targetDir, staticPath) {
   buildIndexHtml(srcDir, targetDir, dirHtml, staticPath);
 };
 
-//构建并生成对应的index.html
+//采用异步的方式构建并生成对应的index.html
 function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath) {
-  var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
-
   var noteStr = "";
   var noteHtml = "";
-  if (fs.existsSync(path.join(srcDir, "/README.md"))) {
+  //判断文件是否存在
+  fs.access(path.join(srcDir, "/README.md"), fs.constants.F_OK, (err) => {
+    if(err) return;
     //读取readme.md文件
-    noteStr = fs.readFileSync(path.join(srcDir, "/README.md")).toString();
-    //解析文件并生成html
-    noteHtml = marked(noteStr, { renderer: renderer });
-  }
+    fs.readFile(path.join(srcDir, "/README.md"), (err, data) => {
+      if (err) return;
+      noteStr=data.toString();
+      //解析文件并生成html
+      noteHtml = marked(noteStr, { renderer: renderer });
+      //进行参数替换
+      templateUtil.replaceWithTemplate(indexTempalteArr,"staticPath",staticPath);
+      templateUtil.replaceWithTemplate(indexTempalteArr,"notePath",path.join(varUtil.noteSavePath+"/note", "/README.md").replace(/\\/g,"/"));
+      templateUtil.replaceWithTemplate(indexTempalteArr,"sidebar-file",dirHtml);
+      templateUtil.replaceWithTemplate(indexTempalteArr,"body",noteHtml);
+      templateUtil.replaceWithTemplate(indexTempalteArr,"toc-detail",varUtil.dirDetailHtml);
 
-  //进行模板的参数替换
-  var indexHtml = template
-    .replace(new RegExp("#{staticPath}", "gm"), staticPath)
-    .replace("#{notePath}",path.join(varUtil.noteSavePath+"/note", "/README.md").replace(/\\/g,"/"))
-    .replace("#{sidebar-file}", dirHtml)
-    .replace("#{body}", noteHtml)
-    .replace("#{toc-detail}",varUtil.dirDetailHtml);
-
-  try {
-    fs.writeFileSync(
-      path.join(targetDir, "index.html"),
-      indexHtml
-      // minify(indexHtml, {
-      //   removeComments: true,
-      //   collapseWhitespace: true,
-      //   minifyJS: true,
-      //   minifyCSS: true
-      // })
-    ); //开启文本压缩
-  } catch (err) {
-    console.log("html文件写入失败:" + err);
-  }
+      //生成html
+      var indexHtml=templateUtil.buildTemplateArrToHtml(indexTempalteArr);
+      fs.writeFile(path.join(targetDir, "index.html"), indexHtml, (err) => {
+        if (err) {
+          console.log("html文件写入失败:" + err);
+        }
+      });
+    });
+  });
 }

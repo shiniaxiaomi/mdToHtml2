@@ -10,6 +10,9 @@ var isNeedClone = undefined; //需要clone
 var blogArr=[];//存放blog名称的数组
 var noteSavePath="D:"; //note文件夹保存的盘符
 
+var startTime=Date.now();//记录程序启动的时间
+var isOpenLog=true;//标记是否打开日志记录
+
 //本地测试
 if (os.type() != "Windows_NT") {
   //线上
@@ -38,3 +41,14 @@ exports.isNeedClone = isNeedClone; //需要clone
 //=====其他变量======
 exports.blogArr=blogArr;
 exports.noteSavePath=noteSavePath;
+
+//打印从开启启动到程序某一位置的时间
+exports.logTime=function(str){
+  if(isOpenLog){
+    if(str==undefined){
+      console.log("距离启动:"+(Date.now()-startTime)/1000+"s")
+    }else{
+      console.log(str+":"+(Date.now()-startTime)/1000+"s")
+    }
+  }
+}

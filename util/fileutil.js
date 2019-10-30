@@ -4,31 +4,6 @@ const path = require("path");
 const mapDirUtil = require("./mapdirutil");
 const minify = require("html-minifier").minify; //文本压缩
 const varUtil=require("./varUtil.js");
-// const marked = require("marked"); //markdown解析
-
-//构建并生成对应的index.html
-// function buildIndexHtml(srcDir, targetDir, dirHtml, staticPath,renderer) {
-//   var template = fs.readFileSync(path.join(".", "/html/index.html")).toString();
-//   //进行模板的参数替换
-//   var indexHtml = template
-//     .replace(new RegExp("#{staticPath}", "gm"), staticPath)
-//     .replace("#{sidebar-file}", dirHtml);
-
-//   try {
-//     fs.writeFileSync(
-//       path.join(targetDir, "index.html"),
-//       // indexHtml
-//       minify(indexHtml, {
-//         removeComments: true,
-//         collapseWhitespace: true,
-//         minifyJS: true,
-//         minifyCSS: true
-//       })
-//     ); //开启文本压缩
-//   } catch (err) {
-//     console.log("html文件写入失败:" + err);
-//   }
-// }
 
 //将dirData树状对象转化为Blog数组
 function dirDataToBlogArr(dirData){
