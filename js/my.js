@@ -100,8 +100,15 @@ function searchNote() {
 }
 
 // 提示弹窗
+var isTip=false;//标记是否已经按下按钮
 function tip(){
-  alert("正在打开Typora中...");
+  //如果没有按下按钮
+  if(!isTip){
+    isTip=true;
+    msg("正在打开Typora中...",1500,function(){
+      isTip=false;//恢复按钮
+    });
+  }
 }
 
 //===============文件夹和大纲
