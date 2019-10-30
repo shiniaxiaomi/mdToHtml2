@@ -49,7 +49,7 @@ exports.buildTemplateArrToHtml=function buildTemplateArrToHtml(templateArr) {
       obj.isNeedReplace = true;
     }
   });
-  return strArr.join();
+  return strArr.join("");
 }
 
 //Demo
