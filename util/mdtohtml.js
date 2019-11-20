@@ -155,8 +155,8 @@ var noteData = {}; //存放note的原数据
 var titleList = []; //暂存h1-h6标签的内容
 var dirHtml = ""; //目录的html结构
 
-var contextTemplate=fs.readFileSync(path.join(__dirname, "..", "/html/template.html")).toString();//读取内容模板字符串
-var indexTemplate=fs.readFileSync(path.join(".", "/html/index.html")).toString()//读取index模板字符串
+var contextTemplate=fs.readFileSync(path.join(__dirname, "..", "./html/template.html")).toString();//读取内容模板字符串
+var indexTemplate=fs.readFileSync(path.join(".", "./html/index.html")).toString()//读取index模板字符串
 
 var contextTemplateArr=templateUtil.analysisTemplate(contextTemplate);//通过内容模板生成内容模板数组
 var indexTempalteArr=templateUtil.analysisTemplate(indexTemplate);//通过index模板生成index模板数组

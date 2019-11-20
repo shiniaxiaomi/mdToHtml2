@@ -63,11 +63,49 @@ app.get("/search/:blog", function(req, res) {
   }
 });
 
+//当'/getJson/java'搜索java关键字时
+app.get("/getJson/:blog", function(req, res) {
+
+  var blogName=req.uparams.blog.trim().toLowerCase();//转化成小写
+  // var resultBlog=undefined;//保存匹配度最高的blog对象
+  var AlfredJson={
+    "items": []
+  }
+  var item={
+      "uid": "",
+      "type": "url",
+      "title": "",
+      "subtitle": "",
+      "arg": "",
+      "autocomplete": "",
+      "icon": {
+          "type": "",
+          "path": ""
+      }
+  }
+
+  for(var i=0;i<varUtil.blogArr.length;i++){
+    if(varUtil.blogArr[i].name.toLowerCase().indexOf(blogName)!=-1){
+      var buff =JSON.parse(JSON.stringify(item));
+      buff.uid=varUtil.blogArr[i].name;
+      buff.title=varUtil.blogArr[i].name;
+      buff.subtitle=varUtil.blogArr[i].link;
+      buff.arg=varUtil.blogArr[i].link;
+      AlfredJson.items.push(buff);
+    }
+  }
+
+  
+  res.json(AlfredJson);//返回json对象
+
+});
+
 app.post("/syncNote", urlencodedParser, function(req, res) {
   if (req.body.password == "123456") {
     //执行同步操作
     //构建笔记html
     console.log("同步按钮: 开始构建笔记--------------");
+    varUtil.blogArr=[];//在构建之前，将原来缓存的数据清空
     var output = build.startToBuild(
       varUtil.gitUrl,
       varUtil.srcDir,
