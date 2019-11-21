@@ -66,7 +66,7 @@ app.get("/search/:blog", function(req, res) {
 //当'/getJson/java'搜索java关键字时
 app.get("/getJson/:blog", function(req, res) {
 
-  var blogName=req.uparams.blog.trim().toLowerCase();//转化成小写
+  var blogName=req.params.blog.trim().toLowerCase();//转化成小写
   // var resultBlog=undefined;//保存匹配度最高的blog对象
   var AlfredJson={
     "items": []
