@@ -129,6 +129,7 @@ app.post("/syncNote", urlencodedParser, function(req, res) {
 //每天凌晨4点钟执行
 schedule.scheduleJob("0 0 4 * * *", function() {
   console.log(getDate() + " 定时任务开始构建笔记--------------");
+  varUtil.blogArr=[];//在构建之前，将原来缓存的数据清空
   var output = build.startToBuild(
     varUtil.gitUrl,
     varUtil.srcDir,
